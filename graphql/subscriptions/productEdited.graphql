@@ -1,0 +1,79 @@
+fragment ProductAttributesWebhookPayload on SelectedAttribute {
+  attribute {
+      id
+      name
+      type
+    }
+}
+
+fragment ProductWebhookPayload on Product {
+  id
+  name
+  description
+  slug
+  thumbnail {
+    url
+  }
+  attributes {
+    ...ProductAttributesWebhookPayload
+  }
+}
+
+fragment ProductVariantWebhookPayload on ProductVariant {
+  id
+  name
+  sku
+  attributes {
+    ...ProductAttributesWebhookPayload
+  }
+  
+  product {
+    ...ProductWebhookPayload
+  }
+}
+
+
+subscription ProductEdited {
+  event {
+    __typename
+    ...on ProductUpdated {
+      __typename
+      product {
+        ...ProductWebhookPayload
+      }
+    }
+    ...on ProductCreated {
+      __typename
+      product {
+        ...ProductWebhookPayload
+      }
+    }
+    ...on ProductDeleted {
+      __typename
+      product {
+        id
+      }
+    }
+    ...on ProductVariantCreated {
+      __typename
+      productVariant {
+      	...ProductVariantWebhookPayload
+      }
+    }
+    ...on ProductVariantUpdated {
+      __typename
+      productVariant {
+      	...ProductVariantWebhookPayload
+      }
+    }
+    ...on ProductVariantDeleted {
+      __typename
+      productVariant {
+        id
+        product {
+          id
+        }
+      }
+    }
+  }
+}

@@ -2,6 +2,12 @@ import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
 
 import packageJson from "../../../package.json";
+import {webhook as PRODUCT_CREATED} from './webhooks/saleor/PRODUCT_CREATED';
+import {webhook as PRODUCT_DELETED} from './webhooks/saleor/PRODUCT_DELETED';
+import {webhook as PRODUCT_UPDATED} from './webhooks/saleor/PRODUCT_UPDATED';
+import {webhook as PRODUCT_VARIANT_CREATED} from './webhooks/saleor/PRODUCT_VARIANT_CREATED';
+import {webhook as PRODUCT_VARIANT_DELETED} from './webhooks/saleor/PRODUCT_VARIANT_DELETED';
+import {webhook as PRODUCT_VARIANT_UPDATED} from './webhooks/saleor/PRODUCT_VARIANT_UPDATED';
 
 export default createManifestHandler({
   async manifestFactory(context) {
@@ -14,8 +20,10 @@ export default createManifestHandler({
          * Set permissions for app if needed
          * https://docs.saleor.io/docs/3.x/developer/permissions
          */
+        "MANAGE_PRODUCTS",
+        "MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES",
       ],
-      id: "saleor.app",
+      id: packageJson.name,
       version: packageJson.version,
       webhooks: [
         /**
@@ -23,6 +31,12 @@ export default createManifestHandler({
          * Read more
          * https://docs.saleor.io/docs/3.x/developer/api-reference/objects/webhook
          */
+         PRODUCT_CREATED.getWebhookManifest(context.appBaseUrl),
+         PRODUCT_DELETED.getWebhookManifest(context.appBaseUrl),
+         PRODUCT_UPDATED.getWebhookManifest(context.appBaseUrl),
+         PRODUCT_VARIANT_CREATED.getWebhookManifest(context.appBaseUrl),
+         PRODUCT_VARIANT_DELETED.getWebhookManifest(context.appBaseUrl),
+         PRODUCT_VARIANT_UPDATED.getWebhookManifest(context.appBaseUrl),
       ],
       extensions: [
         /**
