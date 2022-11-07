@@ -8,7 +8,7 @@ export const config = {
   },
 };
 
-export const webhook = new SaleorAsyncWebhook<ProductEditedSubscription['event']>({
+export const webhook = new SaleorAsyncWebhook<ProductEditedSubscription["event"]>({
   webhookPath: "api/webhooks/saleor/PRODUCT_UPDATED",
   asyncEvent: "PRODUCT_UPDATED",
   apl: saleorApp.apl,

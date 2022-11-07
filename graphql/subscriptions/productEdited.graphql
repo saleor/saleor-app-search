@@ -1,9 +1,9 @@
 fragment ProductAttributesWebhookPayload on SelectedAttribute {
   attribute {
-      id
-      name
-      type
-    }
+    id
+    name
+    type
+  }
 }
 
 fragment ProductWebhookPayload on Product {
@@ -26,47 +26,46 @@ fragment ProductVariantWebhookPayload on ProductVariant {
   attributes {
     ...ProductAttributesWebhookPayload
   }
-  
+
   product {
     ...ProductWebhookPayload
   }
 }
 
-
 subscription ProductEdited {
   event {
     __typename
-    ...on ProductUpdated {
+    ... on ProductUpdated {
       __typename
       product {
         ...ProductWebhookPayload
       }
     }
-    ...on ProductCreated {
+    ... on ProductCreated {
       __typename
       product {
         ...ProductWebhookPayload
       }
     }
-    ...on ProductDeleted {
+    ... on ProductDeleted {
       __typename
       product {
         id
       }
     }
-    ...on ProductVariantCreated {
+    ... on ProductVariantCreated {
       __typename
       productVariant {
-      	...ProductVariantWebhookPayload
+        ...ProductVariantWebhookPayload
       }
     }
-    ...on ProductVariantUpdated {
+    ... on ProductVariantUpdated {
       __typename
       productVariant {
-      	...ProductVariantWebhookPayload
+        ...ProductVariantWebhookPayload
       }
     }
-    ...on ProductVariantDeleted {
+    ... on ProductVariantDeleted {
       __typename
       productVariant {
         id

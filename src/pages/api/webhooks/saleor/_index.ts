@@ -1,17 +1,15 @@
 import { NextWebhookApiHandler } from "@saleor/app-sdk/handlers/next";
 import { ProductEditedSubscription } from "../../../../../generated/graphql";
 
-/**
- * `productUpdatedWebhook` object created earlier provides ready to use handler which validates incoming request.
- * Also it will provide context object containing request properties and most importantly - typed payload.
- */
 export const handler: NextWebhookApiHandler<ProductEditedSubscription["event"]> = async (
   req,
   res,
-  context
+  context,
 ) => {
   const { event, authData } = context;
-  console.log(`New event ${event} (${context.payload?.__typename}) from the ${authData.domain} domain has been received!`);
+  console.log(
+    `New event ${event} (${context.payload?.__typename}) from the ${authData.domain} domain has been received!`,
+  );
 
   switch (context.payload?.__typename) {
     case "ProductCreated":
@@ -27,7 +25,9 @@ export const handler: NextWebhookApiHandler<ProductEditedSubscription["event"]> 
     case "ProductVariantUpdated": {
       const { productVariant } = context.payload;
       if (productVariant) {
-        console.log(`Payload contains ${productVariant.name} (id: ${productVariant.id}) product variant`);
+        console.log(
+          `Payload contains ${productVariant.name} (id: ${productVariant.id}) product variant`,
+        );
       }
       res.status(200).end();
       return;

@@ -9,7 +9,7 @@ function GraphQLProvider(props: PropsWithChildren<{}>) {
   const domain = appBridgeState?.domain!;
 
   const client = createClient(`https://${domain}/graphql/`, async () =>
-    Promise.resolve({ token: appBridgeState?.token! })
+    Promise.resolve({ token: appBridgeState?.token! }),
   );
 
   return <Provider value={client} {...props} />;
