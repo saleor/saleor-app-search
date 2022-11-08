@@ -1,14 +1,9 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { uniqBy } from "lodash";
 import { useEffect, useState } from "react";
-import { useClient } from "urql";
 import {
   ChannelsDocument,
   ProductsDataForImportDocument,
   ProductsDataForImportQuery,
-  ProductWebhookPayloadFragment,
-  useChannelsQuery,
-  useProductsDataForImportQuery,
 } from "../../generated/graphql";
 import { nextClient } from "../lib/graphql";
 
