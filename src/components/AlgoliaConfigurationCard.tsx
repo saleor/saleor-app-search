@@ -4,6 +4,7 @@ import { Card, CardActions, CardHeader, TextField } from "@material-ui/core";
 import { useForm } from "react-hook-form";
 import { useQuery } from "react-query";
 import { AlgoliaConfigurationFields } from "../lib/algolia/types";
+import { fetchConfiguration } from "../lib/configuration";
 
 export const AlgoliaConfigurationCard = () => {
   const { appBridge, appBridgeState } = useAppBridge();
@@ -18,15 +19,7 @@ export const AlgoliaConfigurationCard = () => {
       setValue("searchKey", data?.searchKey || "");
       setValue("appId", data?.appId || "");
     },
-    queryFn: async () => {
-      const res = await fetch("/api/configuration", {
-        headers: {
-          "saleor-domain": domain!,
-        },
-      });
-      const data = (await res.json()) as { data?: AlgoliaConfigurationFields };
-      return data.data;
-    },
+    queryFn: async () => fetchConfiguration(domain!),
     enabled: !!token && !!domain,
   });
 
