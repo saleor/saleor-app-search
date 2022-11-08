@@ -9,11 +9,11 @@ export const config = {
   },
 };
 
-export const webhook = new SaleorAsyncWebhook<ProductEditedSubscription["event"]>({
-  webhookPath: "api/webhooks/saleor/PRODUCT_CREATED",
-  asyncEvent: "PRODUCT_CREATED",
+export const webhookProductDeleted = new SaleorAsyncWebhook<ProductEditedSubscription["event"]>({
+  webhookPath: "api/webhooks/saleor/PRODUCT_DELETED",
+  asyncEvent: "PRODUCT_DELETED",
   apl: saleorApp.apl,
   subscriptionQueryAst: ProductEditedDocument,
 });
 
-export default webhook.createHandler(handler);
+export default webhookProductDeleted.createHandler(handler);

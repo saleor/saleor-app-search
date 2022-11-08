@@ -2,12 +2,12 @@ import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
 
 import packageJson from "../../../package.json";
-import { webhook as PRODUCT_CREATED } from "./webhooks/saleor/PRODUCT_CREATED";
-import { webhook as PRODUCT_DELETED } from "./webhooks/saleor/PRODUCT_DELETED";
-import { webhook as PRODUCT_UPDATED } from "./webhooks/saleor/PRODUCT_UPDATED";
-import { webhook as PRODUCT_VARIANT_CREATED } from "./webhooks/saleor/PRODUCT_VARIANT_CREATED";
-import { webhook as PRODUCT_VARIANT_DELETED } from "./webhooks/saleor/PRODUCT_VARIANT_DELETED";
-import { webhook as PRODUCT_VARIANT_UPDATED } from "./webhooks/saleor/PRODUCT_VARIANT_UPDATED";
+import { webhookProductCreated } from "./webhooks/saleor/product_created";
+import { webhookProductDeleted } from "./webhooks/saleor/product_deleted";
+import { webhookProductUpdated } from "./webhooks/saleor/product_updated";
+import { webhookProductVariantCreated } from "./webhooks/saleor/product_variant_created";
+import { webhookProductVariantDeleted } from "./webhooks/saleor/product_variant_deleted";
+import { webhookProductVariantUpdated } from "./webhooks/saleor/product_variant_updated";
 
 export default createManifestHandler({
   async manifestFactory(context) {
@@ -31,12 +31,12 @@ export default createManifestHandler({
          * Read more
          * https://docs.saleor.io/docs/3.x/developer/api-reference/objects/webhook
          */
-        PRODUCT_CREATED.getWebhookManifest(context.appBaseUrl),
-        PRODUCT_DELETED.getWebhookManifest(context.appBaseUrl),
-        PRODUCT_UPDATED.getWebhookManifest(context.appBaseUrl),
-        PRODUCT_VARIANT_CREATED.getWebhookManifest(context.appBaseUrl),
-        PRODUCT_VARIANT_DELETED.getWebhookManifest(context.appBaseUrl),
-        PRODUCT_VARIANT_UPDATED.getWebhookManifest(context.appBaseUrl),
+        webhookProductCreated.getWebhookManifest(context.appBaseUrl),
+        webhookProductDeleted.getWebhookManifest(context.appBaseUrl),
+        webhookProductUpdated.getWebhookManifest(context.appBaseUrl),
+        webhookProductVariantCreated.getWebhookManifest(context.appBaseUrl),
+        webhookProductVariantDeleted.getWebhookManifest(context.appBaseUrl),
+        webhookProductVariantUpdated.getWebhookManifest(context.appBaseUrl),
       ],
       extensions: [
         /**

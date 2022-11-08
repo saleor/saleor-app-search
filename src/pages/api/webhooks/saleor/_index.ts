@@ -1,11 +1,5 @@
 import { NextWebhookApiHandler } from "@saleor/app-sdk/handlers/next";
-import {
-  Product,
-  ProductEditedSubscription,
-  ProductWebhookPayloadFragment,
-  ProductVariant,
-  ProductVariantWebhookPayloadFragment,
-} from "../../../../../generated/graphql";
+import { ProductEditedSubscription } from "../../../../../generated/graphql";
 import { AlgoliaSearchProvider } from "../../../../lib/algolia/algoliaSearchProvider";
 
 export const handler: NextWebhookApiHandler<ProductEditedSubscription["event"]> = async (
