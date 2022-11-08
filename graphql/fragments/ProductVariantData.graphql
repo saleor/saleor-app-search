@@ -2,13 +2,6 @@ fragment ProductVariantData on ProductVariant {
   id
   name
   sku
-  channelListings {
-    id
-    channel {
-      slug
-      currencyCode
-    }
-  }
   pricing {
     price {
       gross {

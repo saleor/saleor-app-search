@@ -9,4 +9,12 @@ fragment ProductData on Product {
   attributes {
     ...ProductAttributesData
   }
+  channelListings {
+    id
+    visibleInListings
+    channel {
+      slug
+      currencyCode
+    }
+  }
 }
