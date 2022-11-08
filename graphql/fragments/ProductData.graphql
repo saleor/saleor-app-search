@@ -1,0 +1,12 @@
+fragment ProductData on Product {
+  id
+  name
+  description
+  slug
+  thumbnail {
+    url
+  }
+  attributes {
+    ...ProductAttributesData
+  }
+}

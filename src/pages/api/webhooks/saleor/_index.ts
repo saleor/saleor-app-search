@@ -6,7 +6,7 @@ import {
   ProductVariant,
   ProductVariantWebhookPayloadFragment,
 } from "../../../../../generated/graphql";
-import { AlgoliaSearchProvider } from "../../../../lib/algoliaSearchProvider";
+import { AlgoliaSearchProvider } from "../../../../lib/algolia/algoliaSearchProvider";
 
 export const handler: NextWebhookApiHandler<ProductEditedSubscription["event"]> = async (
   req,
@@ -19,7 +19,10 @@ export const handler: NextWebhookApiHandler<ProductEditedSubscription["event"]> 
   );
 
   // @todo read configuration from the API
-  const searchProvider = new AlgoliaSearchProvider();
+  const searchProvider = new AlgoliaSearchProvider({
+    appId: "ANKRQ9LXXM",
+    apiKey: "2d5407b44db9029601fc8c6054fc74ec",
+  });
 
   switch (context.payload?.__typename) {
     case "ProductCreated": {
@@ -41,7 +44,7 @@ export const handler: NextWebhookApiHandler<ProductEditedSubscription["event"]> 
     case "ProductDeleted": {
       const { product } = context.payload;
       if (product) {
-        await searchProvider.deleteProduct(product.id);
+        await searchProvider.deleteProduct(product);
       }
       res.status(200).end();
       return;
@@ -65,7 +68,7 @@ export const handler: NextWebhookApiHandler<ProductEditedSubscription["event"]> 
     case "ProductVariantDeleted": {
       const { productVariant } = context.payload;
       if (productVariant) {
-        await searchProvider.deleteProductVariant(productVariant.id);
+        await searchProvider.deleteProductVariant(productVariant);
       }
       res.status(200).end();
       return;

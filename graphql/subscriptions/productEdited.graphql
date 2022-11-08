@@ -1,37 +1,3 @@
-fragment ProductAttributesWebhookPayload on SelectedAttribute {
-  attribute {
-    id
-    name
-    type
-  }
-}
-
-fragment ProductWebhookPayload on Product {
-  id
-  name
-  description
-  slug
-  thumbnail {
-    url
-  }
-  attributes {
-    ...ProductAttributesWebhookPayload
-  }
-}
-
-fragment ProductVariantWebhookPayload on ProductVariant {
-  id
-  name
-  sku
-  attributes {
-    ...ProductAttributesWebhookPayload
-  }
-
-  product {
-    ...ProductWebhookPayload
-  }
-}
-
 subscription ProductEdited {
   event {
     __typename
@@ -50,7 +16,7 @@ subscription ProductEdited {
     ... on ProductDeleted {
       __typename
       product {
-        id
+        ...ProductWebhookPayload
       }
     }
     ... on ProductVariantCreated {
@@ -68,10 +34,7 @@ subscription ProductEdited {
     ... on ProductVariantDeleted {
       __typename
       productVariant {
-        id
-        product {
-          id
-        }
+        ...ProductVariantWebhookPayload
       }
     }
   }
