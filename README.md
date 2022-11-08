@@ -34,31 +34,34 @@ Before you start, make sure you have installed:
 - [pnpm](https://pnpm.io/)
 - [Saleor CLI](https://docs.saleor.io/docs/3.x/cli) - optional, but recommended
 
-
 1. Install the dependencies by running:
+
 ```
 pnpm install
 ```
 
 2. Start the local server with:
+
 ```
 pnpm dev
 ```
 
 3. Expose local environment using tunnel:
+
 - Use Saleor CLI `saleor app tunnel`
 - Use tunneling tools like [localtunnel](https://github.com/localtunnel/localtunnel) or [ngrok](https://ngrok.com/).
 
 4. Install application at your dashboard:
 
 If you use Saleor Cloud or your local server is exposed, you can install your app by following this link:
+
 ```
 [YOUR_SALEOR_DASHBOARD_URL]/apps/install?manifestUrl=[YOUR_APP_TUNNEL_MANIFEST_URL]
 ```
+
 This template host manifest at `/api/manifest`
 
-
-You can also install application using GQL or command line. Follow the guide [how to install your app](https://docs.saleor.io/docs/3.x/developer/extending/apps/installing-apps#installation-using-graphql-api) to learn more. 
+You can also install application using GQL or command line. Follow the guide [how to install your app](https://docs.saleor.io/docs/3.x/developer/extending/apps/installing-apps#installation-using-graphql-api) to learn more.
 
 ### Generated schema and typings
 
