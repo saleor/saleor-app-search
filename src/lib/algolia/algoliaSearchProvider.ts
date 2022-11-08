@@ -47,32 +47,36 @@ export class AlgoliaSearchProvider implements SearchProvider {
   async updateProductVariant(productVariant: ProductVariantWebhookPayloadFragment) {
     console.log(`updateProductVariant`);
 
-    if (!productVariant.channelListings) {
+    if (!productVariant.product.channelListings) {
       return;
     }
 
     await Promise.all(
-      productVariant.channelListings.map(async (channelListing) => {
-        const index = this.#algolia.initIndex(channelListingToAlgoliaIndexId(channelListing));
+      productVariant.product.channelListings
+        .filter((channelListing) => channelListing.visibleInListings)
+        .map(async (channelListing) => {
+          const index = this.#algolia.initIndex(channelListingToAlgoliaIndexId(channelListing));
 
-        const object = productAndVariantToAlgolia(productVariant);
-        return index.saveObject(object).wait();
-      }),
+          const object = productAndVariantToAlgolia(productVariant);
+          return index.saveObject(object).wait();
+        }),
     );
   }
   async deleteProductVariant(productVariant: ProductVariantWebhookPayloadFragment) {
     console.log(`deleteProductVariant`);
 
-    if (!productVariant.channelListings) {
+    if (!productVariant.product.channelListings) {
       return;
     }
 
     await Promise.all(
-      productVariant.channelListings.map(async (channelListing) => {
-        const index = this.#algolia.initIndex(channelListingToAlgoliaIndexId(channelListing));
-        const objectID = productAndVariantToObjectID(productVariant);
-        return index.deleteObject(objectID);
-      }),
+      productVariant.product.channelListings
+        .filter((channelListing) => channelListing.visibleInListings)
+        .map(async (channelListing) => {
+          const index = this.#algolia.initIndex(channelListingToAlgoliaIndexId(channelListing));
+          const objectID = productAndVariantToObjectID(productVariant);
+          return index.deleteObject(objectID);
+        }),
     );
   }
 }

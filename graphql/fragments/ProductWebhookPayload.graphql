@@ -1,4 +1,5 @@
 fragment ProductWebhookPayload on Product {
+  id
   variants {
     ...ProductVariantData
   }

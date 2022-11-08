@@ -6,7 +6,6 @@ query ProductsDataForImport($first: Int, $channel: String, $after: String) {
     }
     edges {
       node {
-        id
         ...ProductWebhookPayload
       }
     }
