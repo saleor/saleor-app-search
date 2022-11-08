@@ -6,6 +6,7 @@ import { ThemeProvider as MacawUIThemeProvider } from "@saleor/macaw-ui";
 import React, { PropsWithChildren, useEffect } from "react";
 import { AppProps } from "next/app";
 import GraphQLProvider from "../providers/GraphQLProvider";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 const themeOverrides: Partial<Theme> = {
   /**
@@ -18,6 +19,8 @@ const themeOverrides: Partial<Theme> = {
  * TODO: This is React 18 issue, consider hiding this workaround inside app-sdk
  */
 const appBridgeInstance = typeof window !== "undefined" ? new AppBridge() : undefined;
+
+const queryClient = new QueryClient();
 
 /**
  * That's a hack required by Macaw-UI incompatibility with React@18
@@ -41,7 +44,9 @@ function NextApp({ Component, pageProps }: AppProps) {
     <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
       <GraphQLProvider>
         <ThemeProvider overrides={themeOverrides} ssr>
-          <Component {...pageProps} />
+          <QueryClientProvider client={queryClient}>
+            <Component {...pageProps} />
+          </QueryClientProvider>
         </ThemeProvider>
       </GraphQLProvider>
     </AppBridgeProvider>
