@@ -17,10 +17,10 @@ export function productAndVariantToAlgolia({
 }: ProductVariantWebhookPayloadFragment) {
   const attributes = {
     ...product.attributes.reduce((acc, attr, idx) => {
-      return { ...acc, [attr.attribute.name ?? ""]: attr.values[idx].name ?? "" };
+      return { ...acc, [attr.attribute.name ?? ""]: attr.values[idx]?.name ?? "" };
     }, {}),
     ...variant.attributes.reduce((acc, attr, idx) => {
-      return { ...acc, [attr.attribute.name ?? ""]: attr.values[idx].name ?? "" };
+      return { ...acc, [attr.attribute.name ?? ""]: attr.values[idx]?.name ?? "" };
     }, {}),
   };
 
@@ -28,12 +28,12 @@ export function productAndVariantToAlgolia({
     objectID: productAndVariantToObjectID({ product, ...variant }),
     productId: product.id,
     variantId: variant.id,
-    autoGenerateObjectIDIfNotExist: false,
     name: `${product.name} - ${variant.name}`,
     ...attributes,
     description: product.description,
     slug: product.slug,
     thumbnail: product.thumbnail?.url,
+    grossPrice: variant.pricing?.price?.gross?.amount,
   };
   return object;
 }

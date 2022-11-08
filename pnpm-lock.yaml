@@ -25,6 +25,7 @@ specifiers:
   graphql: ^16.6.0
   graphql-tag: ^2.12.6
   next: 13.0.2
+  next-urql: 4.0.0
   prettier: ^2.7.1
   react: 18.2.0
   react-dom: 18.2.0
@@ -42,6 +43,7 @@ dependencies:
   graphql: 16.6.0
   graphql-tag: 2.12.6_graphql@16.6.0
   next: registry.npmjs.org/next/13.0.2_mqvh5p7ejg4taogoj6tpk3gd5a
+  next-urql: registry.npmjs.org/next-urql/4.0.0_react@18.2.0+urql@3.0.3
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   urql: 3.0.3_onqnqwb3ubg5opvemcqf7c2qhy
@@ -685,7 +687,7 @@ packages:
       common-tags: 1.8.2
       graphql: 16.6.0
       import-from: 4.0.0
-      lodash: 4.17.21
+      lodash: registry.npmjs.org/lodash/4.17.21
       tslib: 2.4.0
     dev: true
 
@@ -1602,10 +1604,6 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       p-locate: 4.1.0
-    dev: true
-
-  /lodash/4.17.21:
-    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
     dev: true
 
   /loose-envify/1.4.0:
@@ -6946,6 +6944,20 @@ packages:
     version: 1.4.0
     dev: true
 
+  registry.npmjs.org/next-urql/4.0.0_react@18.2.0+urql@3.0.3:
+    resolution: {integrity: sha512-c/dLhNg9bP+ku7GJDAYlsNnKEazrjcDnRx8/mBsGnjMj4c0yM+p2PBGbirWXkYL7Z2ogOHnSqHTt8swB9sJvQg==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.org/next-urql/-/next-urql-4.0.0.tgz}
+    id: registry.npmjs.org/next-urql/4.0.0
+    name: next-urql
+    version: 4.0.0
+    peerDependencies:
+      react: '>=16.8.0'
+      urql: ^3.0.0
+    dependencies:
+      react: 18.2.0
+      react-ssr-prepass: registry.npmjs.org/react-ssr-prepass/1.5.0_react@18.2.0
+      urql: 3.0.3_onqnqwb3ubg5opvemcqf7c2qhy
+    dev: false
+
   registry.npmjs.org/next/13.0.2_mqvh5p7ejg4taogoj6tpk3gd5a:
     resolution: {integrity: sha512-uQ5z5e4D9mOe8+upy6bQdYYjo/kk1v3jMW87kTy2TgAyAsEO+CkwRnMgyZ4JoHEnhPZLHwh7dk0XymRNLe1gFw==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.org/next/-/next-13.0.2.tgz}
     id: registry.npmjs.org/next/13.0.2
@@ -7493,6 +7505,17 @@ packages:
     version: 2.1.2
     peerDependencies:
       react: ^16.3.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+    dev: false
+
+  registry.npmjs.org/react-ssr-prepass/1.5.0_react@18.2.0:
+    resolution: {integrity: sha512-yFNHrlVEReVYKsLI5lF05tZoHveA5pGzjFbFJY/3pOqqjGOmMmqx83N4hIjN2n6E1AOa+eQEUxs3CgRnPmT0RQ==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.org/react-ssr-prepass/-/react-ssr-prepass-1.5.0.tgz}
+    id: registry.npmjs.org/react-ssr-prepass/1.5.0
+    name: react-ssr-prepass
+    version: 1.5.0
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
       react: 18.2.0
     dev: false
