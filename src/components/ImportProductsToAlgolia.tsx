@@ -3,11 +3,11 @@ import { Button } from "@saleor/macaw-ui";
 import { useCallback, useEffect, useState } from "react";
 import {
   ProductWebhookPayloadFragment,
+  useChannelsQuery,
   useProductsDataForImportQuery,
 } from "../../generated/graphql";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
-
-const PER_PAGE = 10;
+import { useQueryAllProducts } from "./useQueryAllProducts";
 
 // @todo read configuration from the API
 const searchProvider = new AlgoliaSearchProvider({
@@ -17,34 +17,13 @@ const searchProvider = new AlgoliaSearchProvider({
 
 export const ImportProductsToAlgolia = () => {
   const [started, setStarted] = useState(false);
-  const [products, setProducts] = useState<ProductWebhookPayloadFragment[]>([]);
-  const [cursor, setCursor] = useState("");
+  const products = useQueryAllProducts(!started);
+
   const [currentProductIndex, setCurrentProductIndex] = useState(0);
   const [isAlgoliaImporting, setIsAlgoliaImporting] = useState(false);
-
   const importProducts = useCallback(() => {
     setStarted(true);
   }, []);
-
-  const [productsResponse] = useProductsDataForImportQuery({
-    variables: {
-      after: cursor,
-      first: PER_PAGE,
-    },
-    pause: !started,
-  });
-  useEffect(() => {
-    if (!productsResponse.fetching && !productsResponse.error && productsResponse.data?.products) {
-      setProducts((ps) => [
-        ...ps,
-        ...(productsResponse.data?.products?.edges.map((e) => e.node) || []),
-      ]);
-      if (productsResponse.data.products.pageInfo.endCursor) {
-        setCursor(productsResponse.data.products.pageInfo.endCursor);
-      }
-    }
-    productsResponse;
-  }, [productsResponse]);
 
   useEffect(() => {
     if (isAlgoliaImporting || products.length <= currentProductIndex) {
