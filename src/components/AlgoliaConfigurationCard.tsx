@@ -2,7 +2,7 @@ import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Button } from "@saleor/macaw-ui";
 import { Card, CardActions, CardHeader, TextField } from "@material-ui/core";
 import { useForm } from "react-hook-form";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { AlgoliaConfigurationFields } from "../lib/algolia/types";
 import { fetchConfiguration } from "../lib/configuration";
 
@@ -11,6 +11,8 @@ export const AlgoliaConfigurationCard = () => {
   const { register, handleSubmit, setValue } = useForm<AlgoliaConfigurationFields>();
 
   const { token, domain } = appBridgeState || {};
+
+  const reactQueryClient = useQueryClient();
 
   const { isLoading } = useQuery({
     queryKey: ["configuration"],
@@ -33,15 +35,18 @@ export const AlgoliaConfigurationCard = () => {
       },
       body: JSON.stringify(conf),
     })
-      .then((resp) => {
-        if (resp.status === 200) {
-          appBridge?.dispatch({
+      .then(async (resp) => {
+        if (resp.status >= 200 && resp.status < 300) {
+          await appBridge?.dispatch({
             type: "notification",
             payload: {
               status: "success",
               title: "Saved configuration",
               actionId: "message-from-app",
             },
+          });
+          return reactQueryClient.refetchQueries({
+            queryKey: ["configuration"],
           });
         } else {
           appBridge?.dispatch({

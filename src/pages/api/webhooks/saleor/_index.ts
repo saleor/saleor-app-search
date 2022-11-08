@@ -1,6 +1,7 @@
 import { NextWebhookApiHandler } from "@saleor/app-sdk/handlers/next";
 import { ProductEditedSubscription } from "../../../../../generated/graphql";
 import { AlgoliaSearchProvider } from "../../../../lib/algolia/algoliaSearchProvider";
+import { fetchConfiguration } from "../../../../lib/configuration";
 
 export const handler: NextWebhookApiHandler<ProductEditedSubscription["event"]> = async (
   req,
@@ -12,10 +13,23 @@ export const handler: NextWebhookApiHandler<ProductEditedSubscription["event"]> 
     `New event ${event} (${context.payload?.__typename}) from the ${authData.domain} domain has been received!`,
   );
 
+  const algoliaConfiguration = await fetchConfiguration(authData.domain);
+
+  if (!algoliaConfiguration?.appId) {
+    return res.status(500).json({
+      message: `Missing 'appId'`,
+    });
+  }
+  if (!algoliaConfiguration.secretKey) {
+    return res.status(500).json({
+      message: `Missing 'secretKey'`,
+    });
+  }
+
   // @todo read configuration from the API
   const searchProvider = new AlgoliaSearchProvider({
-    appId: "ANKRQ9LXXM",
-    apiKey: "2d5407b44db9029601fc8c6054fc74ec",
+    appId: algoliaConfiguration?.appId, // "ANKRQ9LXXM",
+    apiKey: algoliaConfiguration?.secretKey, // "2d5407b44db9029601fc8c6054fc74ec",
   });
 
   switch (context.payload?.__typename) {

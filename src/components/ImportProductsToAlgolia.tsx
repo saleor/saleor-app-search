@@ -1,23 +1,26 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Button } from "@saleor/macaw-ui";
-import { useCallback, useEffect, useState } from "react";
-import {
-  ProductWebhookPayloadFragment,
-  useChannelsQuery,
-  useProductsDataForImportQuery,
-} from "../../generated/graphql";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
+import { useConfiguration } from "../lib/configuration";
 import { useQueryAllProducts } from "./useQueryAllProducts";
-
-// @todo read configuration from the API
-const searchProvider = new AlgoliaSearchProvider({
-  appId: "ANKRQ9LXXM",
-  apiKey: "2d5407b44db9029601fc8c6054fc74ec",
-});
 
 export const ImportProductsToAlgolia = () => {
   const [started, setStarted] = useState(false);
   const products = useQueryAllProducts(!started);
+
+  const { appBridgeState } = useAppBridge();
+  const algoliaConfiguration = useConfiguration(appBridgeState?.domain);
+
+  const searchProvider = useMemo(() => {
+    if (!algoliaConfiguration.data?.appId || !algoliaConfiguration.data.secretKey) {
+      return null;
+    }
+    return new AlgoliaSearchProvider({
+      appId: algoliaConfiguration.data.appId, // "ANKRQ9LXXM",
+      apiKey: algoliaConfiguration.data.secretKey, // "2d5407b44db9029601fc8c6054fc74ec",
+    });
+  }, [algoliaConfiguration.data?.appId, algoliaConfiguration.data?.secretKey]);
 
   const [currentProductIndex, setCurrentProductIndex] = useState(0);
   const [isAlgoliaImporting, setIsAlgoliaImporting] = useState(false);
@@ -26,7 +29,7 @@ export const ImportProductsToAlgolia = () => {
   }, []);
 
   useEffect(() => {
-    if (isAlgoliaImporting || products.length <= currentProductIndex) {
+    if (!searchProvider || isAlgoliaImporting || products.length <= currentProductIndex) {
       return;
     }
     (async () => {
@@ -36,7 +39,7 @@ export const ImportProductsToAlgolia = () => {
       setIsAlgoliaImporting(false);
       setCurrentProductIndex((i) => i + 1);
     })();
-  }, [currentProductIndex, isAlgoliaImporting, products]);
+  }, [searchProvider, currentProductIndex, isAlgoliaImporting, products]);
 
   return (
     <div
@@ -46,7 +49,7 @@ export const ImportProductsToAlgolia = () => {
         alignItems: "center",
       }}
     >
-      <Button disabled={started} onClick={importProducts}>
+      <Button disabled={started || !searchProvider} onClick={importProducts}>
         Start importing products to Algolia
       </Button>
       {started && (
