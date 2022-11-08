@@ -61,6 +61,11 @@ export class AlgoliaSearchProvider implements SearchProvider {
           return index.saveObject(object).wait();
         }),
     );
+    await Promise.all(
+      productVariant.product.channelListings
+        .filter((channelListing) => !channelListing.visibleInListings)
+        .map(() => this.deleteProductVariant(productVariant)),
+    );
   }
   async deleteProductVariant(productVariant: ProductVariantWebhookPayloadFragment) {
     console.log(`deleteProductVariant`);
@@ -70,13 +75,11 @@ export class AlgoliaSearchProvider implements SearchProvider {
     }
 
     await Promise.all(
-      productVariant.product.channelListings
-        .filter((channelListing) => channelListing.visibleInListings)
-        .map(async (channelListing) => {
-          const index = this.#algolia.initIndex(channelListingToAlgoliaIndexId(channelListing));
-          const objectID = productAndVariantToObjectID(productVariant);
-          return index.deleteObject(objectID);
-        }),
+      productVariant.product.channelListings.map(async (channelListing) => {
+        const index = this.#algolia.initIndex(channelListingToAlgoliaIndexId(channelListing));
+        const objectID = productAndVariantToObjectID(productVariant);
+        return index.deleteObject(objectID);
+      }),
     );
   }
 }
