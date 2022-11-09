@@ -1,4 +1,5 @@
 import { ProductVariantWebhookPayloadFragment } from "../../../generated/graphql";
+import { isNotNil } from "../isNotNil";
 
 type PartialChannelListing = {
   channel: {
@@ -9,19 +10,18 @@ type PartialChannelListing = {
 
 export function channelListingToAlgoliaIndexId(
   channelListing: PartialChannelListing,
-  indexNamePrefix?: string,
+  indexNamePrefix: string | undefined,
 ) {
   const nameSegments = [
+    indexNamePrefix,
     channelListing.channel.slug,
     channelListing.channel.currencyCode,
     "products",
   ];
-  if (indexNamePrefix) {
-    nameSegments.splice(0, 0, indexNamePrefix);
-  }
-  return nameSegments.join(".");
+  return nameSegments.filter(isNotNil).join(".");
 }
 
+export type AlgoliaObject = ReturnType<typeof productAndVariantToAlgolia>;
 export function productAndVariantToAlgolia({
   product,
   ...variant

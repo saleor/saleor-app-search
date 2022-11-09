@@ -7,9 +7,11 @@ import {
 } from "../../generated/graphql";
 import { nextClient } from "../lib/graphql";
 
-const PER_PAGE = 10;
+const PER_PAGE = 100;
 
-type Products = NonNullable<ProductsDataForImportQuery["products"]>["edges"][number]["node"][];
+export type Products = NonNullable<
+  ProductsDataForImportQuery["products"]
+>["edges"][number]["node"][];
 
 export const useQueryAllProducts = (paused: boolean) => {
   const { appBridgeState } = useAppBridge();
