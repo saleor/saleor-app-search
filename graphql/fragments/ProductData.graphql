@@ -3,6 +3,21 @@ fragment ProductData on Product {
   name
   description
   slug
+  category {
+    name
+    parent {
+      name
+      parent {
+        name
+        parent {
+          name
+          parent {
+            name
+          }
+        }
+      }
+    }
+  }
   thumbnail {
     url
   }
