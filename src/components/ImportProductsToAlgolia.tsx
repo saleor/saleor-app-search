@@ -5,8 +5,13 @@ import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
 import { useConfiguration } from "../lib/configuration";
 import { useQueryAllProducts } from "./useQueryAllProducts";
 
+const BATCH_SIZE = 100;
+
 export const ImportProductsToAlgolia = () => {
   const [started, setStarted] = useState(false);
+  const [currentProductIndex, setCurrentProductIndex] = useState(0);
+  const [isAlgoliaImporting, setIsAlgoliaImporting] = useState(false);
+
   const products = useQueryAllProducts(!started);
 
   const { appBridgeState } = useAppBridge();
@@ -27,8 +32,6 @@ export const ImportProductsToAlgolia = () => {
     algoliaConfiguration?.data?.secretKey,
   ]);
 
-  const [currentProductIndex, setCurrentProductIndex] = useState(0);
-  const [isAlgoliaImporting, setIsAlgoliaImporting] = useState(false);
   const importProducts = useCallback(() => {
     setStarted(true);
   }, []);
@@ -39,10 +42,14 @@ export const ImportProductsToAlgolia = () => {
     }
     (async () => {
       setIsAlgoliaImporting(true);
-      const product = products[currentProductIndex];
-      await searchProvider.createProduct(product);
+      const productsBatchStartIndex = currentProductIndex;
+      const productsBatchEndIndex = Math.min(currentProductIndex + BATCH_SIZE, products.length);
+      const productsBatch = products.slice(productsBatchStartIndex, productsBatchEndIndex);
+
+      await searchProvider.updatedBatchProducts(productsBatch);
+
       setIsAlgoliaImporting(false);
-      setCurrentProductIndex((i) => i + 1);
+      setCurrentProductIndex(productsBatchEndIndex);
     })();
   }, [searchProvider, currentProductIndex, isAlgoliaImporting, products]);
 
@@ -52,6 +59,7 @@ export const ImportProductsToAlgolia = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        cursor: started ? "wait" : "auto",
       }}
     >
       <Button disabled={started || !searchProvider} onClick={importProducts}>
