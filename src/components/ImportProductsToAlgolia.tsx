@@ -3,7 +3,7 @@ import { Button } from "@saleor/macaw-ui";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
 import { useConfiguration } from "../lib/configuration";
-import { useQueryAllProducts } from "./useQueryAllProducts";
+import { Products, useQueryAllProducts } from "./useQueryAllProducts";
 
 const BATCH_SIZE = 100;
 
@@ -63,7 +63,7 @@ export const ImportProductsToAlgolia = () => {
       }}
     >
       <Button disabled={started || !searchProvider} onClick={importProducts}>
-        Start importing products to Algolia
+        Start importing products and variants to Algolia
       </Button>
       {started && (
         <div
@@ -74,7 +74,8 @@ export const ImportProductsToAlgolia = () => {
             alignItems: "center",
           }}
         >
-          {currentProductIndex} / {products.length}
+          {countVariants(products, currentProductIndex)} /{" "}
+          {countVariants(products, products.length)}
           <progress
             value={currentProductIndex}
             max={products.length}
@@ -89,3 +90,6 @@ export const ImportProductsToAlgolia = () => {
     </div>
   );
 };
+
+const countVariants = (products: Products, index: number) =>
+  products.slice(0, index).reduce((acc, p) => acc + (p.variants?.length ?? 0), 0);
