@@ -13,14 +13,18 @@ import {
 export interface AlgoliaSearchProviderOptions {
   appId: string;
   apiKey: string;
+  indexNamePrefix?: string;
 }
 
 // @todo implement batch operations
 export class AlgoliaSearchProvider implements SearchProvider {
   #algolia: SearchClient;
 
-  constructor({ appId, apiKey }: AlgoliaSearchProviderOptions) {
+  indexNamePrefix?: string;
+
+  constructor({ appId, apiKey, indexNamePrefix }: AlgoliaSearchProviderOptions) {
     this.#algolia = Algoliasearch(appId, apiKey);
+    this.indexNamePrefix = indexNamePrefix;
   }
   async createProduct(product: ProductWebhookPayloadFragment) {
     console.log(`createProduct`);
@@ -55,7 +59,9 @@ export class AlgoliaSearchProvider implements SearchProvider {
       productVariant.product.channelListings
         .filter((channelListing) => channelListing.visibleInListings)
         .map(async (channelListing) => {
-          const index = this.#algolia.initIndex(channelListingToAlgoliaIndexId(channelListing));
+          const index = this.#algolia.initIndex(
+            channelListingToAlgoliaIndexId(channelListing, this.indexNamePrefix),
+          );
 
           const object = productAndVariantToAlgolia(productVariant);
           return index.saveObject(object).wait();
@@ -76,7 +82,9 @@ export class AlgoliaSearchProvider implements SearchProvider {
 
     await Promise.all(
       productVariant.product.channelListings.map(async (channelListing) => {
-        const index = this.#algolia.initIndex(channelListingToAlgoliaIndexId(channelListing));
+        const index = this.#algolia.initIndex(
+          channelListingToAlgoliaIndexId(channelListing, this.indexNamePrefix),
+        );
         const objectID = productAndVariantToObjectID(productVariant);
         return index.deleteObject(objectID);
       }),

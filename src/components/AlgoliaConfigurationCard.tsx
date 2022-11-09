@@ -20,6 +20,7 @@ export const AlgoliaConfigurationCard = () => {
       setValue("secretKey", data?.secretKey || "");
       setValue("searchKey", data?.searchKey || "");
       setValue("appId", data?.appId || "");
+      setValue("indexNamePrefix", data?.indexNamePrefix || "");
     },
     queryFn: async () => fetchConfiguration(domain!),
     enabled: !!token && !!domain,
@@ -96,6 +97,13 @@ export const AlgoliaConfigurationCard = () => {
             disabled={isFormDisabled}
             label="App ID"
             {...register("appId")}
+            fullWidth
+          />
+          <TextField
+            variant="standard"
+            disabled={isFormDisabled}
+            label="Index name prefix"
+            {...register("indexNamePrefix")}
             fullWidth
           />
           <CardActions style={{ padding: "30px 0 0 0" }}>
