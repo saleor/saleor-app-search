@@ -22,6 +22,34 @@ export function channelListingToAlgoliaIndexId(
   return nameSegments.join(".");
 }
 
+/**
+ * Produces category tree in the format expected by hierarchical Algolia widgets, for example:
+ *
+ * {
+ *  "lvl0": "Root Category",
+ *  "lvl1": "Root Category > Subcategory"
+ *  "lvl2": "Root Category > Subcategory > Sub-subcategory"
+ * }
+ * https://www.algolia.com/doc/guides/managing-results/refine-results/faceting/#hierarchical-facets
+ */
+export function categoryHierarchicalFacets({ product }: ProductVariantWebhookPayloadFragment) {
+  const categoryParents = [
+    product.category?.parent?.parent?.parent?.parent?.name,
+    product.category?.parent?.parent?.parent?.name,
+    product.category?.parent?.parent?.name,
+    product.category?.parent?.name,
+    product.category?.name,
+  ].filter((category) => category?.length);
+
+  const categoryLvlMapping: Record<string, string> = {};
+
+  for (let i = 0; i < categoryParents.length; i += 1) {
+    categoryLvlMapping[`lvl${i}`] = categoryParents.slice(0, i + 1).join(" > ");
+  }
+
+  return categoryLvlMapping;
+}
+
 export function productAndVariantToAlgolia({
   product,
   ...variant
@@ -47,6 +75,7 @@ export function productAndVariantToAlgolia({
     slug: product.slug,
     thumbnail: product.thumbnail?.url,
     grossPrice: variant.pricing?.price?.gross?.amount,
+    categories: categoryHierarchicalFacets({ product, ...variant }),
   };
   return object;
 }
