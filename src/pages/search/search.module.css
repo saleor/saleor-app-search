@@ -1,0 +1,44 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 192px;
+    width: 192px;
+    text-align: center;
+}
+
+.hitsWrapper {
+    display: flex;
+    flex-wrap: wrap;
+
+}
+.textField {
+    border: none;
+}
+.textFieldContainer {
+    display: flex;
+    place-content: left;
+}
+
+.contentWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.grid {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 4fr 9fr;
+    grid-gap: 2rem;
+}
+
+.fallbackThumbnail {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 240px;
+    height: 192px;
+}
+.filters {
+    margin-left: 16px;
+}
