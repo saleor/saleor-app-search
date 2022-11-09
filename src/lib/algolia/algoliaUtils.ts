@@ -7,8 +7,19 @@ type PartialChannelListing = {
   };
 };
 
-export function channelListingToAlgoliaIndexId(channelListing: PartialChannelListing) {
-  return `${channelListing.channel.slug}.${channelListing.channel.currencyCode}.products`;
+export function channelListingToAlgoliaIndexId(
+  channelListing: PartialChannelListing,
+  indexNamePrefix?: string,
+) {
+  const nameSegments = [
+    channelListing.channel.slug,
+    channelListing.channel.currencyCode,
+    "products",
+  ];
+  if (indexNamePrefix) {
+    nameSegments.splice(0, 0, indexNamePrefix);
+  }
+  return nameSegments.join(".");
 }
 
 export function productAndVariantToAlgolia({
@@ -29,6 +40,8 @@ export function productAndVariantToAlgolia({
     productId: product.id,
     variantId: variant.id,
     name: `${product.name} - ${variant.name}`,
+    productName: product.name,
+    variantName: variant.name,
     ...attributes,
     description: product.description,
     slug: product.slug,

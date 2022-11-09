@@ -24,6 +24,7 @@ const sendResponse = async (
       secretKey: (await settings.get("secretKey", domain)) || "",
       searchKey: (await settings.get("searchKey", domain)) || "",
       appId: (await settings.get("appId", domain)) || "",
+      indexNamePrefix: (await settings.get("indexNamePrefix", domain)) || "",
     },
   });
 };
@@ -52,11 +53,14 @@ export default async function handler(
     await sendResponse(res, 200, settings, saleorDomain);
     return;
   } else if (req.method === "POST") {
-    const { appId, searchKey, secretKey } = JSON.parse(req.body) as AlgoliaConfigurationFields;
+    const { appId, searchKey, secretKey, indexNamePrefix } = JSON.parse(
+      req.body,
+    ) as AlgoliaConfigurationFields;
     await settings.set([
       { key: "secretKey", value: secretKey || "", domain: saleorDomain },
       { key: "searchKey", value: searchKey || "", domain: saleorDomain },
       { key: "appId", value: appId || "", domain: saleorDomain },
+      { key: "indexNamePrefix", value: indexNamePrefix || "", domain: saleorDomain },
     ]);
     await sendResponse(res, 200, settings, saleorDomain);
     return;

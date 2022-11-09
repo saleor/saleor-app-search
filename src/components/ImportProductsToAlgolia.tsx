@@ -17,10 +17,15 @@ export const ImportProductsToAlgolia = () => {
       return null;
     }
     return new AlgoliaSearchProvider({
-      appId: algoliaConfiguration.data.appId, // "ANKRQ9LXXM",
-      apiKey: algoliaConfiguration.data.secretKey, // "2d5407b44db9029601fc8c6054fc74ec",
+      appId: algoliaConfiguration.data.appId,
+      apiKey: algoliaConfiguration.data.secretKey,
+      indexNamePrefix: algoliaConfiguration.data.indexNamePrefix,
     });
-  }, [algoliaConfiguration.data?.appId, algoliaConfiguration.data?.secretKey]);
+  }, [
+    algoliaConfiguration?.data?.appId,
+    algoliaConfiguration?.data?.indexNamePrefix,
+    algoliaConfiguration?.data?.secretKey,
+  ]);
 
   const [currentProductIndex, setCurrentProductIndex] = useState(0);
   const [isAlgoliaImporting, setIsAlgoliaImporting] = useState(false);
