@@ -2,7 +2,7 @@ import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Button } from "@saleor/macaw-ui";
 import { Card, CardActions, CardHeader, TextField } from "@material-ui/core";
 import { useForm } from "react-hook-form";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery, useQueryClient, useMutation } from "react-query";
 import { AlgoliaConfigurationFields } from "../lib/algolia/types";
 import { fetchConfiguration } from "../lib/configuration";
 
@@ -14,7 +14,7 @@ export const AlgoliaConfigurationCard = () => {
 
   const reactQueryClient = useQueryClient();
 
-  const { isLoading } = useQuery({
+  const { isLoading: isQueryLoading } = useQuery({
     queryKey: ["configuration"],
     onSuccess(data) {
       setValue("secretKey", data?.secretKey || "");
@@ -25,53 +25,52 @@ export const AlgoliaConfigurationCard = () => {
     enabled: !!token && !!domain,
   });
 
-  const isFormDisabled = isLoading || !token || !domain;
-
-  const onFormSubmit = handleSubmit(async (conf) =>
-    fetch("/api/configuration", {
-      method: "POST",
-      headers: {
-        "saleor-domain": domain!,
+  const { mutate, isLoading: isMutationLoading } = useMutation(
+    async (conf: AlgoliaConfigurationFields) => {
+      const resp = await fetch("/api/configuration", {
+        method: "POST",
+        headers: {
+          "saleor-domain": domain!,
+        },
+        body: JSON.stringify(conf),
+      });
+      if (resp.status >= 200 && resp.status < 300) {
+        const data = (await resp.json()) as { data?: AlgoliaConfigurationFields };
+        return data.data;
+      }
+      throw new Error(`Server responded with status code ${resp.status}`);
+    },
+    {
+      onSuccess: async () => {
+        reactQueryClient.refetchQueries({
+          queryKey: ["configuration"],
+        });
+        appBridge?.dispatch({
+          type: "notification",
+          payload: {
+            status: "success",
+            title: "Configuration saved!",
+            actionId: "message-from-app",
+          },
+        });
       },
-      body: JSON.stringify(conf),
-    })
-      .then(async (resp) => {
-        if (resp.status >= 200 && resp.status < 300) {
-          await appBridge?.dispatch({
-            type: "notification",
-            payload: {
-              status: "success",
-              title: "Saved configuration",
-              actionId: "message-from-app",
-            },
-          });
-          return reactQueryClient.refetchQueries({
-            queryKey: ["configuration"],
-          });
-        } else {
-          appBridge?.dispatch({
-            type: "notification",
-            payload: {
-              status: "error",
-              title: "Could not save",
-              text: `Response status: ${resp.status}`,
-              actionId: "message-from-app",
-            },
-          });
-        }
-      })
-      .catch((e) =>
+      onError: async (data: Error) => {
         appBridge?.dispatch({
           type: "notification",
           payload: {
             status: "error",
-            title: "Could not save",
-            text: `${e.toString()}`,
+            title: "Could not save the configuration",
+            text: data.message,
             actionId: "message-from-app",
           },
-        }),
-      ),
+        });
+      },
+    },
   );
+
+  const onFormSubmit = handleSubmit(async (conf) => mutate(conf));
+
+  const isFormDisabled = isMutationLoading || isQueryLoading || !token || !domain;
 
   return (
     <Card>
@@ -101,7 +100,7 @@ export const AlgoliaConfigurationCard = () => {
           />
           <CardActions style={{ padding: "30px 0 0 0" }}>
             <Button disabled={isFormDisabled} type="submit" variant="primary">
-              Save
+              {isFormDisabled ? "Loading..." : "Save"}
             </Button>
           </CardActions>
         </div>
