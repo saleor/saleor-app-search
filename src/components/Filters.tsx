@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader } from "@material-ui/core";
 import { DynamicWidgets, RangeInput, RefinementList } from "react-instantsearch-hooks-web";
-import styles from "./search.module.css";
+import styles from "../styles/search.module.css";
 
 export const Filters = () => (
   <Card>

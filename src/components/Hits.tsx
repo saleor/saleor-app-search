@@ -1,6 +1,6 @@
 import { ImageIcon } from "@saleor/macaw-ui";
 import { Highlight, useHits } from "react-instantsearch-hooks-web";
-import styles from "./search.module.css";
+import styles from "../styles/search.module.css";
 import Image from "next/image";
 
 function Hit(props: { hit: any }) {

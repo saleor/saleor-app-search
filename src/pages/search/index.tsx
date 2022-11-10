@@ -2,12 +2,12 @@ import algoliasearch from "algoliasearch/lite";
 import { InstantSearch } from "react-instantsearch-hooks-web";
 import "instantsearch.css/themes/reset.css";
 import "instantsearch.css/themes/satellite.css";
-import styles from "./search.module.css";
+import styles from "../../styles/search.module.css";
 
 import { PageTab, PageTabs } from "@saleor/macaw-ui";
-import { Filters } from "./Filters";
-import { SearchBox } from "./SearchBox";
-import { Hits } from "./Hits";
+import { Filters } from "../../components/Filters";
+import { SearchBox } from "../../components/SearchBox";
+import { Hits } from "../../components/Hits";
 import { useRouter } from "next/router";
 
 const apiKey = process.env.NEXT_PUBLIC_ALGOLIA_API_KEY ?? "";
