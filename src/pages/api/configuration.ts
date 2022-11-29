@@ -6,6 +6,9 @@ import { createClient } from "../../lib/graphql";
 import { createSettingsManager } from "../../lib/metadata";
 import { saleorApp } from "../../../saleor-app";
 import { AlgoliaConfigurationFields } from "../../lib/algolia/types";
+import { createDebug } from "../../lib/debug";
+
+const debug = createDebug("/api/configuration");
 
 export interface SettingsApiResponse {
   success: boolean;
@@ -33,12 +36,13 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<SettingsApiResponse>,
 ) {
+  debug("Request received");
   const saleorDomain = req.headers[SALEOR_DOMAIN_HEADER] as string;
 
   const authData = await saleorApp.apl.get(saleorDomain);
 
   if (!authData) {
-    console.debug(`Could not find auth data for the domain ${saleorDomain}.`);
+    debug(`Could not find auth data for the domain ${saleorDomain}.`);
     res.status(401).json({ success: false });
     return;
   }
