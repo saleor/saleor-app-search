@@ -32,4 +32,11 @@ fragment ProductData on Product {
       currencyCode
     }
   }
+  collections {
+    name
+  }
+  metadata {
+    key
+    value
+  }
 }
