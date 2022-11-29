@@ -1,7 +1,12 @@
 import { NextWebhookApiHandler } from "@saleor/app-sdk/handlers/next";
 import { ProductEditedSubscription } from "../../../../../generated/graphql";
 import { AlgoliaSearchProvider } from "../../../../lib/algolia/algoliaSearchProvider";
-import { fetchConfiguration } from "../../../../lib/configuration";
+import { createDebug } from "../../../../lib/debug";
+import { createClient } from "../../../../lib/graphql";
+import { createSettingsManager } from "../../../../lib/metadata";
+import { AlgoliaConfigurationFields } from "../../../../lib/algolia/types";
+
+const debug = createDebug("Webhooks handler");
 
 export const handler: NextWebhookApiHandler<ProductEditedSubscription["event"]> = async (
   req,
@@ -9,27 +14,39 @@ export const handler: NextWebhookApiHandler<ProductEditedSubscription["event"]> 
   context,
 ) => {
   const { event, authData } = context;
-  console.log(
+  debug(
     `New event ${event} (${context.payload?.__typename}) from the ${authData.domain} domain has been received!`,
   );
 
-  const algoliaConfiguration = await fetchConfiguration(authData.domain);
+  const client = createClient(`https://${authData.domain}/graphql/`, async () =>
+    Promise.resolve({ token: authData.token }),
+  );
+
+  const settings = createSettingsManager(client);
+
+  const algoliaConfiguration: AlgoliaConfigurationFields = {
+    secretKey: (await settings.get("secretKey", authData.domain)) || "",
+    appId: (await settings.get("appId", authData.domain)) || "",
+    indexNamePrefix: (await settings.get("indexNamePrefix", authData.domain)) || "",
+  };
 
   if (!algoliaConfiguration?.appId) {
+    debug("Missing AppID configuration - returning error response");
     return res.status(500).json({
       message: `Missing 'appId'`,
     });
   }
   if (!algoliaConfiguration.secretKey) {
+    debug("Missing SecretKey configuration - returning error response");
     return res.status(500).json({
       message: `Missing 'secretKey'`,
     });
   }
 
-  // @todo read configuration from the API
   const searchProvider = new AlgoliaSearchProvider({
-    appId: algoliaConfiguration?.appId, // "ANKRQ9LXXM",
-    apiKey: algoliaConfiguration?.secretKey, // "2d5407b44db9029601fc8c6054fc74ec",
+    appId: algoliaConfiguration.appId,
+    apiKey: algoliaConfiguration.secretKey,
+    indexNamePrefix: algoliaConfiguration.indexNamePrefix,
   });
 
   switch (context.payload?.__typename) {
