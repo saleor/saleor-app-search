@@ -5,6 +5,7 @@ import {
 } from "../../../generated/graphql";
 import { isNotNil } from "../isNotNil";
 import { SearchProvider } from "../searchProvider";
+import { createDebug } from "../debug";
 import {
   AlgoliaObject,
   channelListingToAlgoliaIndexId,
@@ -17,6 +18,8 @@ export interface AlgoliaSearchProviderOptions {
   indexNamePrefix?: string;
 }
 
+const debug = createDebug("AlgoliaSearchProvider");
+
 export class AlgoliaSearchProvider implements SearchProvider {
   #algolia: SearchClient;
   #indexNamePrefix?: string | undefined;
@@ -27,6 +30,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
   }
 
   private async saveGroupedByIndex(groupedByIndex: GroupedByIndex) {
+    debug("saveGroupedByIndex called");
     return Promise.all(
       Object.entries(groupedByIndex).map(([indexName, objects]) => {
         const index = this.#algolia.initIndex(indexName);
@@ -36,6 +40,8 @@ export class AlgoliaSearchProvider implements SearchProvider {
   }
 
   private async deleteGroupedByIndex(groupedByIndex: GroupedByIndex) {
+    debug("deleteGroupedByIndex called");
+
     return Promise.all(
       Object.entries(groupedByIndex).map(([indexName, objects]) => {
         const index = this.#algolia.initIndex(indexName);
@@ -45,7 +51,8 @@ export class AlgoliaSearchProvider implements SearchProvider {
   }
 
   async updatedBatchProducts(productsBatch: ProductWebhookPayloadFragment[]) {
-    console.log(`updatedBatchProducts`);
+    debug(`updatedBatchProducts called`);
+
     const groupedByIndex = groupProductsByIndexName(productsBatch, {
       visibleInListings: true,
       indexNamePrefix: this.#indexNamePrefix,
@@ -54,35 +61,39 @@ export class AlgoliaSearchProvider implements SearchProvider {
   }
 
   async createProduct(product: ProductWebhookPayloadFragment) {
-    console.log(`createProduct`);
+    debug(`createProduct called`);
     await this.updateProduct(product);
   }
 
   async updateProduct(product: ProductWebhookPayloadFragment) {
-    console.log(`updateProduct`);
+    debug(`updateProduct called`);
+
     if (!product.variants) {
+      debug("Product has no variants - abort");
       return;
     }
     await Promise.all(product.variants.map((variant) => this.updateProductVariant(variant)));
   }
 
   async deleteProduct(product: ProductWebhookPayloadFragment) {
-    console.log(`deleteProduct`);
+    debug(`deleteProduct`);
     if (!product.variants) {
+      debug("Product has no variants - abort");
       return;
     }
     await Promise.all(product.variants.map((variant) => this.deleteProductVariant(variant)));
   }
 
   async createProductVariant(productVariant: ProductVariantWebhookPayloadFragment) {
-    console.log(`createProductVariant`);
+    debug(`createProductVariant called`);
     return this.updateProductVariant(productVariant);
   }
 
   async updateProductVariant(productVariant: ProductVariantWebhookPayloadFragment) {
-    console.log(`updateProductVariant`);
+    debug(`updateProductVariant called`);
 
     if (!productVariant.product.channelListings) {
+      debug("Product has no channelListings - abort");
       return;
     }
 
@@ -90,22 +101,26 @@ export class AlgoliaSearchProvider implements SearchProvider {
       visibleInListings: true,
       indexNamePrefix: this.#indexNamePrefix,
     });
-    if (groupedByIndexToSave) {
+
+    if (groupedByIndexToSave && !!Object.keys(groupedByIndexToSave).length) {
       await this.saveGroupedByIndex(groupedByIndexToSave);
     }
+
     const groupedByIndexToDelete = groupVariantByIndexName(productVariant, {
       visibleInListings: false,
       indexNamePrefix: this.#indexNamePrefix,
     });
-    if (groupedByIndexToDelete) {
+
+    if (groupedByIndexToDelete && !!Object.keys(groupedByIndexToDelete).length) {
       await this.deleteGroupedByIndex(groupedByIndexToDelete);
     }
   }
 
   async deleteProductVariant(productVariant: ProductVariantWebhookPayloadFragment) {
-    console.log(`deleteProductVariant`);
+    debug(`deleteProductVariant called`);
 
     if (!productVariant.product.channelListings) {
+      debug("No channel listing data - return");
       return;
     }
 
@@ -160,6 +175,7 @@ const groupProductsByIndexName = (
     indexNamePrefix,
   }: { visibleInListings: true | false | null; indexNamePrefix: string | undefined },
 ) => {
+  debug(`groupProductsByIndexName called`);
   const batchesAndIndices = productsBatch
     .flatMap((p) => p.variants)
     .filter(isNotNil)

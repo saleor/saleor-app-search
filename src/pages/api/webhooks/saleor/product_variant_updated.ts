@@ -12,7 +12,7 @@ export const config = {
 export const webhookProductVariantUpdated = new SaleorAsyncWebhook<
   ProductEditedSubscription["event"]
 >({
-  webhookPath: "api/webhooks/saleor/PRODUCT_VARIANT_UPDATED",
+  webhookPath: "api/webhooks/saleor/product_variant_updated",
   asyncEvent: "PRODUCT_VARIANT_UPDATED",
   apl: saleorApp.apl,
   subscriptionQueryAst: ProductEditedDocument,

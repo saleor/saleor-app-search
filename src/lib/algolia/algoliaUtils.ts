@@ -49,6 +49,9 @@ export function categoryHierarchicalFacets({ product }: ProductVariantWebhookPay
   return categoryLvlMapping;
 }
 
+export function formatMetadata({ product }: ProductVariantWebhookPayloadFragment) {
+  return Object.fromEntries(product.metadata?.map(({ key, value }) => [key, value]) || []);
+}
 
 export type AlgoliaObject = ReturnType<typeof productAndVariantToAlgolia>;
 
@@ -65,21 +68,23 @@ export function productAndVariantToAlgolia({
     }, {}),
   };
 
-  const object = {
+  const document = {
     objectID: productAndVariantToObjectID({ product, ...variant }),
     productId: product.id,
     variantId: variant.id,
     name: `${product.name} - ${variant.name}`,
     productName: product.name,
     variantName: variant.name,
-    ...attributes,
+    attributes,
     description: product.description,
     slug: product.slug,
     thumbnail: product.thumbnail?.url,
     grossPrice: variant.pricing?.price?.gross?.amount,
     categories: categoryHierarchicalFacets({ product, ...variant }),
+    collections: product.collections?.map((collection) => collection.name) || [],
+    metadata: formatMetadata({ product, ...variant }),
   };
-  return object;
+  return document;
 }
 
 export function productAndVariantToObjectID({
