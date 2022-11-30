@@ -20,7 +20,13 @@ const themeOverrides: Partial<Theme> = {
  */
 const appBridgeInstance = typeof window !== "undefined" ? new AppBridge() : undefined;
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 /**
  * That's a hack required by Macaw-UI incompatibility with React@18
