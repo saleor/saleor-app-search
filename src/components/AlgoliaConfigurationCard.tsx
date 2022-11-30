@@ -22,7 +22,7 @@ export const AlgoliaConfigurationCard = () => {
       setValue("appId", data?.appId || "");
       setValue("indexNamePrefix", data?.indexNamePrefix || "");
     },
-    queryFn: async () => fetchConfiguration(domain!),
+    queryFn: async () => fetchConfiguration(domain!, token!),
     enabled: !!token && !!domain,
   });
 
@@ -32,6 +32,7 @@ export const AlgoliaConfigurationCard = () => {
         method: "POST",
         headers: {
           "saleor-domain": domain!,
+          "authorization-bearer": token!,
         },
         body: JSON.stringify(conf),
       });
