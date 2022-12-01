@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { SALEOR_DOMAIN_HEADER } from "@saleor/app-sdk/const";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 
 import { createClient } from "../../lib/graphql";
@@ -7,6 +6,8 @@ import { createSettingsManager } from "../../lib/metadata";
 import { saleorApp } from "../../../saleor-app";
 import { AlgoliaConfigurationFields } from "../../lib/algolia/types";
 import { createDebug } from "../../lib/debug";
+
+import { createProtectedHandler, ProtectedHandlerContext } from "@saleor/app-sdk/handlers/next";
 
 const debug = createDebug("/api/configuration");
 
@@ -32,43 +33,42 @@ const sendResponse = async (
   });
 };
 
-export default async function handler(
+export const handler = async (
   req: NextApiRequest,
-  res: NextApiResponse<SettingsApiResponse>,
-) {
-  debug("Request received");
-  const saleorDomain = req.headers[SALEOR_DOMAIN_HEADER] as string;
+  res: NextApiResponse,
+  ctx: ProtectedHandlerContext,
+) => {
+  debug("Configuration handler received request");
 
-  const authData = await saleorApp.apl.get(saleorDomain);
-
-  if (!authData) {
-    debug(`Could not find auth data for the domain ${saleorDomain}.`);
-    res.status(401).json({ success: false });
-    return;
-  }
-
-  const client = createClient(`https://${saleorDomain}/graphql/`, async () =>
-    Promise.resolve({ token: authData.token }),
+  const {
+    authData: { domain, token },
+  } = ctx;
+  const client = createClient(`https://${domain}/graphql/`, async () =>
+    Promise.resolve({ token: token }),
   );
 
   const settings = createSettingsManager(client);
 
   if (req.method === "GET") {
-    await sendResponse(res, 200, settings, saleorDomain);
+    debug("Returning configuration");
+    await sendResponse(res, 200, settings, domain);
     return;
   } else if (req.method === "POST") {
+    debug("Updating the configuration");
     const { appId, searchKey, secretKey, indexNamePrefix } = JSON.parse(
       req.body,
     ) as AlgoliaConfigurationFields;
     await settings.set([
-      { key: "secretKey", value: secretKey || "", domain: saleorDomain },
-      { key: "searchKey", value: searchKey || "", domain: saleorDomain },
-      { key: "appId", value: appId || "", domain: saleorDomain },
-      { key: "indexNamePrefix", value: indexNamePrefix || "", domain: saleorDomain },
+      { key: "secretKey", value: secretKey || "", domain },
+      { key: "searchKey", value: searchKey || "", domain },
+      { key: "appId", value: appId || "", domain },
+      { key: "indexNamePrefix", value: indexNamePrefix || "", domain },
     ]);
-    await sendResponse(res, 200, settings, saleorDomain);
+    await sendResponse(res, 200, settings, domain);
     return;
   }
+  debug("Method not supported");
   res.status(405).end();
-  return;
-}
+};
+
+export default createProtectedHandler(handler, saleorApp.apl);

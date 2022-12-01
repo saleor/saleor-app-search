@@ -9,15 +9,28 @@ import { Filters } from "../../components/Filters";
 import { SearchBox } from "../../components/SearchBox";
 import { Hits } from "../../components/Hits";
 import { useRouter } from "next/router";
-
-const apiKey = process.env.NEXT_PUBLIC_ALGOLIA_API_KEY ?? "";
-const appId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID ?? "";
-
-const searchClient = algoliasearch(appId, apiKey);
+import { useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { useConfiguration } from "../../lib/configuration";
+import { useMemo } from "react";
 
 function Search() {
+  const { appBridgeState } = useAppBridge();
+  const algoliaConfiguration = useConfiguration(appBridgeState?.domain, appBridgeState?.token);
+
+  const searchClient = useMemo(() => {
+    if (!algoliaConfiguration.data?.appId || !algoliaConfiguration.data.secretKey) {
+      return null;
+    }
+    return algoliasearch(algoliaConfiguration.data.appId, algoliaConfiguration.data.secretKey);
+  }, [algoliaConfiguration?.data?.appId, algoliaConfiguration?.data?.secretKey]);
+
   const router = useRouter();
   const handleClick = (val: string) => router.push("/" + val);
+
+  // todo: Provide utils to get available index names
+  const indexName = algoliaConfiguration?.data?.indexNamePrefix
+    ? `${algoliaConfiguration?.data?.indexNamePrefix}.default-channel.USD.products`
+    : "default-channel.USD.products";
 
   return (
     <>
@@ -25,15 +38,17 @@ function Search() {
         <PageTab label={"Configuration"} value="" />
         <PageTab label={"Preview"} value="search" />
       </PageTabs>
-      <InstantSearch searchClient={searchClient} indexName="default-channel.USD.products">
-        <div className={styles.grid}>
-          <Filters />
-          <div className={styles.contentWrapper}>
-            <SearchBox />
-            <Hits />
+      {!!searchClient && (
+        <InstantSearch searchClient={searchClient} indexName={indexName}>
+          <div className={styles.grid}>
+            <Filters />
+            <div className={styles.contentWrapper}>
+              <SearchBox />
+              <Hits />
+            </div>
           </div>
-        </div>
-      </InstantSearch>
+        </InstantSearch>
+      )}
     </>
   );
 }

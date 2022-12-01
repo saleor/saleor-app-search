@@ -15,7 +15,7 @@ export const ImportProductsToAlgolia = () => {
   const products = useQueryAllProducts(!started);
 
   const { appBridgeState } = useAppBridge();
-  const algoliaConfiguration = useConfiguration(appBridgeState?.domain);
+  const algoliaConfiguration = useConfiguration(appBridgeState?.domain, appBridgeState?.token);
 
   const searchProvider = useMemo(() => {
     if (!algoliaConfiguration.data?.appId || !algoliaConfiguration.data.secretKey) {
