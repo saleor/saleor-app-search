@@ -32,6 +32,12 @@
     grid-gap: 2rem;
 }
 
+.filterGrid {
+    display: grid;
+    grid-template-columns: 4fr;
+    grid-gap: 2rem;
+}
+
 .fallbackThumbnail {
     display: flex;
     justify-content: center;
