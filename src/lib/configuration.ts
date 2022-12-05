@@ -17,4 +17,5 @@ export const useConfiguration = (domain?: string | undefined, token?: string | u
   useQuery({
     queryKey: ["configuration"],
     queryFn: () => fetchConfiguration(domain!, token!),
+    enabled: !!token && !!domain,
   });
