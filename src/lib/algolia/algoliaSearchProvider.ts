@@ -92,6 +92,8 @@ export class AlgoliaSearchProvider implements SearchProvider {
   async updateProductVariant(productVariant: ProductVariantWebhookPayloadFragment) {
     debug(`updateProductVariant called`);
 
+    console.log(">>>>", productVariant);
+
     if (!productVariant.product.channelListings) {
       debug("Product has no channelListings - abort");
       return;
@@ -153,7 +155,10 @@ const groupVariantByIndexName = (
       visibleInListings === null ? true : channelListing.visibleInListings === visibleInListings,
     )
     .map((channelListing) => {
-      const object = productAndVariantToAlgolia(productVariant);
+      const object = productAndVariantToAlgolia({
+        variant: productVariant,
+        channel: channelListing.channel.slug,
+      });
       return {
         object,
         indexName: channelListingToAlgoliaIndexId(channelListing, indexNamePrefix),
