@@ -11,6 +11,17 @@ fragment ProductVariantData on ProductVariant {
     }
   }
 
+  channelListings {
+    id
+    channel {
+      slug
+    }
+    price {
+      currency
+      amount
+    }
+  }
+
   attributes {
     ...ProductAttributesData
   }

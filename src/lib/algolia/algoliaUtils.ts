@@ -56,9 +56,13 @@ export function formatMetadata({ product }: ProductVariantWebhookPayloadFragment
 export type AlgoliaObject = ReturnType<typeof productAndVariantToAlgolia>;
 
 export function productAndVariantToAlgolia({
-  product,
-  ...variant
-}: ProductVariantWebhookPayloadFragment) {
+  variant,
+  channel,
+}: {
+  variant: ProductVariantWebhookPayloadFragment;
+  channel: string;
+}) {
+  const product = variant.product;
   const attributes = {
     ...product.attributes.reduce((acc, attr, idx) => {
       return { ...acc, [attr.attribute.name ?? ""]: attr.values[idx]?.name ?? "" };
@@ -68,8 +72,10 @@ export function productAndVariantToAlgolia({
     }, {}),
   };
 
+  const listing = variant.channelListings?.find((l) => l.channel.slug === channel);
+
   const document = {
-    objectID: productAndVariantToObjectID({ product, ...variant }),
+    objectID: productAndVariantToObjectID(variant),
     productId: product.id,
     variantId: variant.id,
     name: `${product.name} - ${variant.name}`,
@@ -79,10 +85,10 @@ export function productAndVariantToAlgolia({
     description: product.description,
     slug: product.slug,
     thumbnail: product.thumbnail?.url,
-    grossPrice: variant.pricing?.price?.gross?.amount,
-    categories: categoryHierarchicalFacets({ product, ...variant }),
+    grossPrice: listing?.price?.amount,
+    categories: categoryHierarchicalFacets(variant),
     collections: product.collections?.map((collection) => collection.name) || [],
-    metadata: formatMetadata({ product, ...variant }),
+    metadata: formatMetadata(variant),
   };
   return document;
 }

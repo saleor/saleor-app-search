@@ -153,7 +153,10 @@ const groupVariantByIndexName = (
       visibleInListings === null ? true : channelListing.visibleInListings === visibleInListings,
     )
     .map((channelListing) => {
-      const object = productAndVariantToAlgolia(productVariant);
+      const object = productAndVariantToAlgolia({
+        variant: productVariant,
+        channel: channelListing.channel.slug,
+      });
       return {
         object,
         indexName: channelListingToAlgoliaIndexId(channelListing, indexNamePrefix),
