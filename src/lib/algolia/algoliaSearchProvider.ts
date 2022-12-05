@@ -92,8 +92,6 @@ export class AlgoliaSearchProvider implements SearchProvider {
   async updateProductVariant(productVariant: ProductVariantWebhookPayloadFragment) {
     debug(`updateProductVariant called`);
 
-    console.log(">>>>", productVariant);
-
     if (!productVariant.product.channelListings) {
       debug("Product has no channelListings - abort");
       return;
