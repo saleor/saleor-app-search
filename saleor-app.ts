@@ -1,5 +1,5 @@
+import { APL, FileAPL, RestAPL, UpstashAPL, VercelAPL } from "@saleor/app-sdk/APL";
 import { SaleorApp } from "@saleor/app-sdk/saleor-app";
-import { APL, FileAPL, UpstashAPL, VercelAPL } from "@saleor/app-sdk/APL";
 
 /**
  * By default auth data are stored in the `.auth-data.json` (FileAPL).
@@ -8,20 +8,40 @@ import { APL, FileAPL, UpstashAPL, VercelAPL } from "@saleor/app-sdk/APL";
  * To read more about storing auth data, read the
  * [APL documentation](https://github.com/saleor/saleor-app-sdk/blob/main/docs/apl.md)
  */
+const aplType = process.env.APL ?? "file";
+let apl: APL;
 
-export let apl: APL;
-switch (process.env.APL) {
+switch (aplType) {
   case "vercel":
     apl = new VercelAPL();
+
     break;
   case "upstash":
-    // Require `UPSTASH_URL` and `UPSTASH_TOKEN` environment variables
     apl = new UpstashAPL();
-    break;
-  default:
-    apl = new FileAPL();
-}
 
+    break;
+  case "file":
+    apl = new FileAPL();
+
+    break;
+  case "rest": {
+    if (!process.env.REST_APL_ENDPOINT || !process.env.REST_APL_TOKEN) {
+      throw new Error("Rest APL is not configured - missing env variables. Check saleor-app.ts");
+    }
+
+    apl = new RestAPL({
+      resourceUrl: process.env.REST_APL_ENDPOINT as string,
+      headers: {
+        Authorization: `Bearer ${process.env.REST_APL_TOKEN as string}`,
+      },
+    });
+
+    break;
+  }
+  default: {
+    throw new Error("Invalid APL config, ");
+  }
+}
 export const saleorApp = new SaleorApp({
   apl,
 });
