@@ -6,17 +6,19 @@
 
 ## About
 
-### What is Saleor App
-
-Saleor App is the fastest way of extending Saleor with custom logic using [asynchronous](https://docs.saleor.io/docs/3.x/developer/extending/apps/asynchronous-webhooks) and [synchronous](https://docs.saleor.io/docs/3.x/developer/extending/apps/synchronous-webhooks) webhooks (and vast Saleor's API). In most cases, creating an App consists of two tasks:
-
-- Writing webhook's code executing your custom logic.
-- Developing configuration UI to be displayed in Saleor Dashboard via specialized view (designated in the App's manifest).
+Saleor App providing integration with the Algolia (and more search engines in the future).
 
 ### What's included?
 
-- 🚀 Communication between Saleor instance and Saleor App
-- 📖 Manifest with webhooks using custom query
+- Synchronize changes of your products catalog with Algolia
+- Search results preview
+- Each channel is a separate index
+
+### How to install
+
+- start local dev server or deploy the application
+- install the application in your Saleor Instance using manifest URL
+- [configure the application](./docs/application-setup.md)
 
 ### Learn more about Apps
 
