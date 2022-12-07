@@ -7,6 +7,8 @@ import React, { PropsWithChildren, useEffect } from "react";
 import { AppProps } from "next/app";
 import GraphQLProvider from "../providers/GraphQLProvider";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
+import { ThemeSynchronizer } from "../lib/theme-synchronizer";
 
 const themeOverrides: Partial<Theme> = {
   /**
@@ -50,6 +52,8 @@ function NextApp({ Component, pageProps }: AppProps) {
     <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
       <GraphQLProvider>
         <ThemeProvider overrides={themeOverrides} ssr>
+          <ThemeSynchronizer />
+          <RoutePropagator />
           <QueryClientProvider client={queryClient}>
             <Component {...pageProps} />
           </QueryClientProvider>
