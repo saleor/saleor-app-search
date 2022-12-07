@@ -4,6 +4,7 @@ import AlgoliaConfigurationCard from "./AlgoliaConfigurationCard";
 import { Grid } from "@material-ui/core";
 import { PageTab, PageTabs } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
+import Instructions from "./Instructions";
 
 export const DashboardActions = () => {
   const router = useRouter();
@@ -16,6 +17,9 @@ export const DashboardActions = () => {
       </PageTabs>
       <div style={{ marginTop: "16px" }} />
       <Grid container spacing={4}>
+        <Grid item xs={12}>
+          <Instructions />
+        </Grid>
         <Grid item xs={12}>
           <AlgoliaConfigurationCard />
         </Grid>
