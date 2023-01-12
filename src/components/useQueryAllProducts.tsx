@@ -15,7 +15,7 @@ export type Products = NonNullable<
 
 export const useQueryAllProducts = (paused: boolean) => {
   const { appBridgeState } = useAppBridge();
-  const domain = appBridgeState?.domain!;
+  const saleorApiUrl = appBridgeState?.saleorApiUrl!;
 
   const [products, setProducts] = useState<Products>([]);
 
@@ -29,7 +29,7 @@ export const useQueryAllProducts = (paused: boolean) => {
     }
 
     const token = appBridgeState.token;
-    const client = nextClient(`https://${domain}/graphql/`, () => Promise.resolve({ token }));
+    const client = nextClient(saleorApiUrl, () => Promise.resolve({ token }));
 
     if (!client) {
       return;
@@ -71,7 +71,7 @@ export const useQueryAllProducts = (paused: boolean) => {
         await getProducts(channel.slug, "");
       }, Promise.resolve());
     })();
-  }, [appBridgeState?.token, domain, paused]);
+  }, [appBridgeState?.token, saleorApiUrl, paused]);
 
   return products;
 };
