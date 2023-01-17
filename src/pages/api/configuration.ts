@@ -41,11 +41,9 @@ export const handler = async (
   debug("Configuration handler received request");
 
   const {
-    authData: { domain, token },
+    authData: { domain, token, saleorApiUrl },
   } = ctx;
-  const client = createClient(`https://${domain}/graphql/`, async () =>
-    Promise.resolve({ token: token }),
-  );
+  const client = createClient(saleorApiUrl, async () => Promise.resolve({ token: token }));
 
   const settings = createSettingsManager(client);
 

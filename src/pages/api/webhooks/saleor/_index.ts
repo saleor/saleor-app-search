@@ -18,7 +18,7 @@ export const handler: NextWebhookApiHandler<ProductEditedSubscription["event"]> 
     `New event ${event} (${context.payload?.__typename}) from the ${authData.domain} domain has been received!`,
   );
 
-  const client = createClient(`https://${authData.domain}/graphql/`, async () =>
+  const client = createClient(authData.saleorApiUrl, async () =>
     Promise.resolve({ token: authData.token }),
   );
 
