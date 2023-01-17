@@ -9,6 +9,7 @@ import GraphQLProvider from "../providers/GraphQLProvider";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
 import { ThemeSynchronizer } from "../lib/theme-synchronizer";
+import { NoSSRWrapper } from "../lib/no-ssr-wrapper";
 
 const themeOverrides: Partial<Theme> = {
   /**
@@ -49,17 +50,19 @@ function NextApp({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
-      <GraphQLProvider>
-        <ThemeProvider overrides={themeOverrides} ssr>
-          <ThemeSynchronizer />
-          <RoutePropagator />
-          <QueryClientProvider client={queryClient}>
-            <Component {...pageProps} />
-          </QueryClientProvider>
-        </ThemeProvider>
-      </GraphQLProvider>
-    </AppBridgeProvider>
+    <NoSSRWrapper>
+      <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
+        <GraphQLProvider>
+          <ThemeProvider overrides={themeOverrides} ssr>
+            <ThemeSynchronizer />
+            <RoutePropagator />
+            <QueryClientProvider client={queryClient}>
+              <Component {...pageProps} />
+            </QueryClientProvider>
+          </ThemeProvider>
+        </GraphQLProvider>
+      </AppBridgeProvider>
+    </NoSSRWrapper>
   );
 }
 

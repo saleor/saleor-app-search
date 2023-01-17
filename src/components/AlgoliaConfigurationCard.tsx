@@ -10,7 +10,7 @@ export const AlgoliaConfigurationCard = () => {
   const { appBridge, appBridgeState } = useAppBridge();
   const { register, handleSubmit, setValue } = useForm<AlgoliaConfigurationFields>();
 
-  const { token, domain } = appBridgeState || {};
+  const { token, saleorApiUrl } = appBridgeState || {};
 
   const reactQueryClient = useQueryClient();
 
@@ -22,8 +22,8 @@ export const AlgoliaConfigurationCard = () => {
       setValue("appId", data?.appId || "");
       setValue("indexNamePrefix", data?.indexNamePrefix || "");
     },
-    queryFn: async () => fetchConfiguration(domain!, token!),
-    enabled: !!token && !!domain,
+    queryFn: async () => fetchConfiguration(saleorApiUrl!, token!),
+    enabled: !!token && !!saleorApiUrl,
   });
 
   const { mutate, isLoading: isMutationLoading } = useMutation(
@@ -31,7 +31,7 @@ export const AlgoliaConfigurationCard = () => {
       const resp = await fetch("/api/configuration", {
         method: "POST",
         headers: {
-          "saleor-domain": domain!,
+          "saleor-api-url": saleorApiUrl!,
           "authorization-bearer": token!,
         },
         body: JSON.stringify(conf),
@@ -72,7 +72,7 @@ export const AlgoliaConfigurationCard = () => {
 
   const onFormSubmit = handleSubmit(async (conf) => mutate(conf));
 
-  const isFormDisabled = isMutationLoading || isQueryLoading || !token || !domain;
+  const isFormDisabled = isMutationLoading || isQueryLoading || !token || !saleorApiUrl;
 
   return (
     <Card>
