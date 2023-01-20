@@ -40,6 +40,14 @@ switch (aplType) {
     throw new Error("Invalid APL config, ");
   }
 }
+
+if (!process.env.SECRET_KEY && process.env.NODE_ENV === "production") {
+  throw new Error(
+    "For production deployment SECRET_KEY is mandatory to use EncryptedSettingsManager.",
+  );
+}
+export const settingsManagerSecretKey = process.env.SECRET_KEY || "development";
+
 export const saleorApp = new SaleorApp({
   apl,
 });
