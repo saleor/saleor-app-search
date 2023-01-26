@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, List, ListItem, Typography } from "@material-ui/core";
+import { Card, CardContent, CardHeader, List, ListItem, Typography, Link } from "@material-ui/core";
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 
 function Instructions() {
@@ -21,38 +21,39 @@ function Instructions() {
     <Card>
       <CardHeader title="Instructions" />
       <CardContent>
-        <Typography>How to configure</Typography>
-        <List>
-          <ListItem>
-            <a
-              onClick={(e) => {
-                e.preventDefault();
-                openExternalUrl(algoliaDashboardUrl);
-              }}
-              href={algoliaDashboardUrl}
-            >
-              Create a new Algolia application
-            </a>
-          </ListItem>
-          <ListItem>
-            Navigate to application keys section and copy values to the form below
-          </ListItem>
-          <ListItem>Save configuration</ListItem>
-        </List>
-        <Typography>Useful links</Typography>
-        <List>
-          <ListItem>
-            <a
-              onClick={(e) => {
-                e.preventDefault();
-                openExternalUrl("https://github.com/saleor/saleor-app-search");
-              }}
-              href="https://github.com/saleor/saleor-app-search"
-            >
-              Visit repository & detailed configuration guide
-            </a>
-          </ListItem>
-        </List>
+        <Typography paragraph>
+          How to configure
+          <List style={{ marginBottom: 20 }}>
+            <ListItem>
+              <a
+                onClick={(e) => {
+                  e.preventDefault();
+                  openExternalUrl(algoliaDashboardUrl);
+                }}
+                href={algoliaDashboardUrl}
+              >
+                Create a new Algolia application
+              </a>
+            </ListItem>
+            <ListItem>
+              Navigate to application keys section and copy values to the form below
+            </ListItem>
+            <ListItem>Save configuration</ListItem>
+          </List>
+          Useful links
+          <List>
+            <ListItem>
+              <Link
+                onClick={(e) => {
+                  e.preventDefault();
+                  openExternalUrl("https://github.com/saleor/saleor-app-search");
+                }}
+              >
+                Visit repository & detailed configuration guide
+              </Link>
+            </ListItem>
+          </List>
+        </Typography>
       </CardContent>
     </Card>
   );

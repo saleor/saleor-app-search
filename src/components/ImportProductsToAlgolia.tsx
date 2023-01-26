@@ -62,10 +62,11 @@ export const ImportProductsToAlgolia = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        padding: 20,
         cursor: started ? "wait" : "auto",
       }}
     >
-      <Button disabled={started || !searchProvider} onClick={importProducts}>
+      <Button disabled={started || !searchProvider} onClick={importProducts} fullWidth>
         Start importing products and variants to Algolia
       </Button>
       {started && (

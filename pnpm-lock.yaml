@@ -12,8 +12,8 @@ specifiers:
   '@material-ui/core': ^4.12.4
   '@material-ui/icons': ^4.11.3
   '@material-ui/lab': 4.0.0-alpha.61
-  '@saleor/app-sdk': 0.27.0
-  '@saleor/macaw-ui': 0.7.0
+  '@saleor/app-sdk': 0.27.1
+  '@saleor/macaw-ui': 0.7.2
   '@sentry/nextjs': ^7.31.1
   '@types/debug': ^4.1.7
   '@types/node': ^18.11.9
@@ -21,6 +21,7 @@ specifiers:
   '@types/react-dom': ^18.0.8
   '@urql/exchange-auth': ^1.0.0
   algoliasearch: 4.14.2
+  clsx: ^1.2.1
   debug: ^4.3.4
   eslint: 8.27.0
   eslint-config-next: 13.0.2
@@ -44,12 +45,13 @@ dependencies:
   '@material-ui/core': 4.12.4_2zx2umvpluuhvlq44va5bta2da
   '@material-ui/icons': 4.11.3_n7wifq4b7gb55fiisdcfvz6txe
   '@material-ui/lab': 4.0.0-alpha.61_n7wifq4b7gb55fiisdcfvz6txe
-  '@saleor/app-sdk': 0.27.0_7jnwqgtpcnwg4nzft4b6xlzlfi
-  '@saleor/macaw-ui': 0.7.0_cfh2pnwiw2dvy5j2l6jfuptovq
+  '@saleor/app-sdk': 0.27.1_7jnwqgtpcnwg4nzft4b6xlzlfi
+  '@saleor/macaw-ui': 0.7.2_cfh2pnwiw2dvy5j2l6jfuptovq
   '@sentry/nextjs': 7.31.1_next@13.1.2+react@18.2.0
   '@types/debug': 4.1.7
   '@urql/exchange-auth': 1.0.0_graphql@16.6.0
   algoliasearch: 4.14.2
+  clsx: 1.2.1
   debug: 4.3.4
   graphql: 16.6.0
   graphql-tag: 2.12.6_graphql@16.6.0
@@ -893,6 +895,7 @@ packages:
 
   /@floating-ui/react-dom-interactions/0.5.0_2zx2umvpluuhvlq44va5bta2da:
     resolution: {integrity: sha512-rfON7mkHjCeogd0BSXPa8GBp1TMxEytJQqGVlCouSUonJ4POqdHsqcxRnCh0yAaGVaL/nB/J1vq28V4RdoLszg==}
+    deprecated: Package renamed to @floating-ui/react
     dependencies:
       '@floating-ui/react-dom': 0.7.2_2zx2umvpluuhvlq44va5bta2da
       aria-hidden: 1.2.1_fan5qbzahqtxlm5dzefqlqx5ia
@@ -1944,8 +1947,8 @@ packages:
     resolution: {integrity: sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.com/@rushstack/eslint-patch/-/eslint-patch-1.2.0.tgz}
     dev: true
 
-  /@saleor/app-sdk/0.27.0_7jnwqgtpcnwg4nzft4b6xlzlfi:
-    resolution: {integrity: sha512-2rNI3mL4EFjmGVNpEKqmpImAACCjP7mVCK8sJKf3W08smWzjqu6xw6pLpXdx8/Vhmn3IhkjUmB4IAc6XBFhslg==}
+  /@saleor/app-sdk/0.27.1_7jnwqgtpcnwg4nzft4b6xlzlfi:
+    resolution: {integrity: sha512-ZNbucokKCdBE1qa+YLHvjBVazYcRuUExBdaPW9aNxfeYyXgQNCdHqJx9oA/S1lMEVSbZSIRcn8Sx1+X/eEV8BA==}
     peerDependencies:
       next: '>=12'
       react: '>=17'
@@ -1965,8 +1968,8 @@ packages:
       - supports-color
     dev: false
 
-  /@saleor/macaw-ui/0.7.0_cfh2pnwiw2dvy5j2l6jfuptovq:
-    resolution: {integrity: sha512-RslkWPkjV8v0P5tz9uJJAS8cj3jGlMsmv8Z8jmteb/Uz+6vfGepAClUBrHt2fby9JRHivPZyn9eBbYW3xNb8Yw==}
+  /@saleor/macaw-ui/0.7.2_cfh2pnwiw2dvy5j2l6jfuptovq:
+    resolution: {integrity: sha512-Fli7fhTWuHu7q2CzxwTUpB4x9HYaxHSAzCLZLA23VY1ieIWbCxbsXadMiMGWp/nuYitswMr6JXMm+1SDe9K8LQ==}
     engines: {node: '>=16 <19'}
     peerDependencies:
       '@material-ui/core': ^4.11.2

@@ -11,12 +11,7 @@ code {
   border-radius: 5px;
   display: inline-block;
   margin-top: 10px;
-  padding: 0.75rem;
+  padding: 0.1em 0.2em;
   font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
     Bitstream Vera Sans Mono, Courier New, monospace;
-}
-
-code::before {
-  content: "$ ";
-  opacity: 0.6;
 }
