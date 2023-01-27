@@ -20,11 +20,15 @@ import { useConfiguration } from "../../lib/configuration";
 import { useMemo, useState } from "react";
 import { Select, MenuItem } from "@material-ui/core";
 import { useQuery } from "react-query";
+import { SearchAppMainBar } from "../../components/SearchAppMainBar";
 
 function Search() {
   const { appBridgeState } = useAppBridge();
   const [indexName, setIndexName] = useState<string>();
-  const algoliaConfiguration = useConfiguration(appBridgeState?.domain, appBridgeState?.token);
+  const algoliaConfiguration = useConfiguration(
+    appBridgeState?.saleorApiUrl,
+    appBridgeState?.token,
+  );
 
   const searchClient = useMemo(() => {
     if (!algoliaConfiguration.data?.appId || !algoliaConfiguration.data.secretKey) {
@@ -54,6 +58,7 @@ function Search() {
 
   return (
     <>
+      <SearchAppMainBar />
       <PageTabs value="search" onChange={handleClick}>
         <PageTab label={"Configuration"} value="" />
         <PageTab label={"Preview"} value="search" />

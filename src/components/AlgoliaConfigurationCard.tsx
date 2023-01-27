@@ -1,19 +1,32 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { Button } from "@saleor/macaw-ui";
+import { Button, makeStyles } from "@saleor/macaw-ui";
 import { Card, CardActions, CardHeader, TextField } from "@material-ui/core";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import { AlgoliaConfigurationFields } from "../lib/algolia/types";
 import { fetchConfiguration } from "../lib/configuration";
 
+const useStyles = makeStyles((theme) => ({
+  form: {
+    margin: theme.spacing(2),
+  },
+  confirmButton: {
+    marginLeft: "auto",
+  },
+  fieldContainer: {
+    marginBottom: theme.spacing(2),
+  },
+}));
+
 export const AlgoliaConfigurationCard = () => {
   const { appBridge, appBridgeState } = useAppBridge();
-  const { register, handleSubmit, setValue } = useForm<AlgoliaConfigurationFields>();
-
+  const { handleSubmit, setValue, control } = useForm<AlgoliaConfigurationFields>({
+    defaultValues: { appId: "", indexNamePrefix: "", searchKey: "", secretKey: "" },
+  });
+  const classes = useStyles();
   const { token, saleorApiUrl } = appBridgeState || {};
 
   const reactQueryClient = useQueryClient();
-
   const { isLoading: isQueryLoading } = useQuery({
     queryKey: ["configuration"],
     onSuccess(data) {
@@ -78,37 +91,57 @@ export const AlgoliaConfigurationCard = () => {
     <Card>
       <form onSubmit={onFormSubmit}>
         <CardHeader title="Configure Algolia settings"></CardHeader>
-        <div style={{ padding: "0 30px 30px" }}>
-          <TextField
-            variant="standard"
-            disabled={isFormDisabled}
-            label="Secret key"
-            {...register("secretKey")}
-            fullWidth
+        <div className={classes.form}>
+          <div key="secret" className={classes.fieldContainer}>
+            <Controller
+              name="secretKey"
+              control={control}
+              render={({ field }) => (
+                <TextField disabled={isFormDisabled} label="Secret key" {...field} fullWidth />
+              )}
+            />
+          </div>
+          <Controller
+            name="searchKey"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                className={classes.fieldContainer}
+                disabled={isFormDisabled}
+                label="Search key"
+                {...field}
+                fullWidth
+              />
+            )}
           />
-          <TextField
-            variant="standard"
-            disabled={isFormDisabled}
-            label="Search key"
-            {...register("searchKey")}
-            fullWidth
+          <Controller
+            name="appId"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                className={classes.fieldContainer}
+                disabled={isFormDisabled}
+                label="App ID"
+                {...field}
+                fullWidth
+              />
+            )}
           />
-          <TextField
-            variant="standard"
-            disabled={isFormDisabled}
-            label="App ID"
-            {...register("appId")}
-            fullWidth
-          />
-          <TextField
-            variant="standard"
-            disabled={isFormDisabled}
-            label="Index name prefix"
-            {...register("indexNamePrefix")}
-            fullWidth
+          <Controller
+            name="indexNamePrefix"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                className={classes.fieldContainer}
+                disabled={isFormDisabled}
+                label="Index name prefix"
+                {...field}
+                fullWidth
+              />
+            )}
           />
           <CardActions style={{ padding: "30px 0 0 0" }}>
-            <Button disabled={isFormDisabled} type="submit" variant="primary">
+            <Button disabled={isFormDisabled} type="submit" variant="primary" fullWidth>
               {isFormDisabled ? "Loading..." : "Save"}
             </Button>
           </CardActions>

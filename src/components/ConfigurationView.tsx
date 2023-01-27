@@ -1,35 +1,46 @@
 import { Card, CardHeader } from "@material-ui/core";
 import { ImportProductsToAlgolia } from "./ImportProductsToAlgolia";
 import AlgoliaConfigurationCard from "./AlgoliaConfigurationCard";
-import { Grid } from "@material-ui/core";
-import { PageTab, PageTabs } from "@saleor/macaw-ui";
+import { makeStyles, PageTab, PageTabs } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import Instructions from "./Instructions";
 
-export const DashboardActions = () => {
+import { AppColumnsLayout } from "./AppColumnsLayout";
+import { SearchAppMainBar } from "./SearchAppMainBar";
+
+const useStyles = makeStyles({
+  buttonsGrid: { display: "flex", gap: 10 },
+  topBar: {
+    marginBottom: 32,
+  },
+  indexActions: {
+    marginTop: 10,
+  },
+});
+
+export const ConfigurationView = () => {
+  const styles = useStyles();
   const router = useRouter();
+
   const handleClick = (val: string) => router.push("/" + val);
   return (
     <div>
+      <SearchAppMainBar />
       <PageTabs value="" onChange={handleClick}>
         <PageTab label={"Configuration"} value="" />
         <PageTab label={"Preview"} value="search" />
       </PageTabs>
-      <div style={{ marginTop: "16px" }} />
-      <Grid container spacing={4}>
-        <Grid item xs={12}>
-          <Instructions />
-        </Grid>
-        <Grid item xs={12}>
+      <AppColumnsLayout>
+        <div />
+        <div>
           <AlgoliaConfigurationCard />
-        </Grid>
-        <Grid item xs={12}>
-          <Card>
+          <Card className={styles.indexActions}>
             <CardHeader title="Index actions" />
             <ImportProductsToAlgolia />
           </Card>
-        </Grid>
-      </Grid>
+        </div>
+        <Instructions />
+      </AppColumnsLayout>
     </div>
   );
 };
@@ -37,4 +48,4 @@ export const DashboardActions = () => {
 /**
  * Export default for Next.dynamic
  */
-export default DashboardActions;
+export default ConfigurationView;
