@@ -1,11 +1,7 @@
-import dynamic from "next/dynamic";
-
-const ClientContent = dynamic(() => import("../components/ConfigurationView"), {
-  ssr: false,
-});
+import ConfigurationView from "../components/ConfigurationView";
 
 const IndexPage = () => {
-  return <ClientContent />;
+  return <ConfigurationView />;
 };
 
 export default IndexPage;
