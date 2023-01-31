@@ -1,4 +1,4 @@
-import { Card, CardHeader } from "@material-ui/core";
+import {Card, CardContent, CardHeader} from "@material-ui/core";
 import { ImportProductsToAlgolia } from "./ImportProductsToAlgolia";
 import AlgoliaConfigurationCard from "./AlgoliaConfigurationCard";
 import { makeStyles, PageTab, PageTabs } from "@saleor/macaw-ui";
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     minHeight: "calc(100vh - 100px)",
     paddingBottom: 50,
   },
-  tabs: { marginLeft: 32 },
+  tabs: { marginLeft: 32, marginBottom: 32 },
 }));
 
 export const ConfigurationView = () => {
@@ -42,7 +42,9 @@ export const ConfigurationView = () => {
           <AlgoliaConfigurationCard />
           <Card className={styles.indexActions}>
             <CardHeader title="Indexing" />
-            <ImportProductsToAlgolia />
+            <CardContent>
+              <ImportProductsToAlgolia />
+            </CardContent>
           </Card>
         </div>
         <Instructions />
