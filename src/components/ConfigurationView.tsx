@@ -41,7 +41,7 @@ export const ConfigurationView = () => {
         <div>
           <AlgoliaConfigurationCard />
           <Card className={styles.indexActions}>
-            <CardHeader title="Index actions" />
+            <CardHeader title="Indexing" />
             <ImportProductsToAlgolia />
           </Card>
         </div>
