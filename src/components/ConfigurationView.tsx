@@ -8,7 +8,7 @@ import Instructions from "./Instructions";
 import { AppColumnsLayout } from "./AppColumnsLayout";
 import { SearchAppMainBar } from "./SearchAppMainBar";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   buttonsGrid: { display: "flex", gap: 10 },
   topBar: {
     marginBottom: 32,
@@ -16,7 +16,13 @@ const useStyles = makeStyles({
   indexActions: {
     marginTop: 10,
   },
-});
+  wrapper: {
+    border: `1px solid ${theme.palette.grey.A100}`,
+    minHeight: "calc(100vh - 100px)",
+    paddingBottom: 50,
+  },
+  tabs: { marginLeft: 32 },
+}));
 
 export const ConfigurationView = () => {
   const styles = useStyles();
@@ -24,9 +30,9 @@ export const ConfigurationView = () => {
 
   const handleClick = (val: string) => router.push("/" + val);
   return (
-    <div>
+    <div className={styles.wrapper}>
       <SearchAppMainBar />
-      <PageTabs value="" onChange={handleClick}>
+      <PageTabs className={styles.tabs} value="" onChange={handleClick}>
         <PageTab label={"Configuration"} value="" />
         <PageTab label={"Preview"} value="search" />
       </PageTabs>
