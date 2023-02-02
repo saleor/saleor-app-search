@@ -1,14 +1,15 @@
 .wrapper {
-    display: flex;
-    flex-direction: column;
-    height: 192px;
-    width: 192px;
-    text-align: center;
+    display: grid;
+    height: 60px;
+    width: 100%;
+    grid-auto-flow: column;
+    grid-template-columns: 60px auto;
+    gap: 30px;
 }
 
 .hitsWrapper {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    gap: 15px;
 
 }
 .textField {
@@ -25,26 +26,25 @@
     gap: 2rem;
 }
 
-.grid {
-    margin-top: 2rem;
-    display: grid;
-    grid-template-columns: 4fr 9fr;
-    grid-gap: 2rem;
-}
-
 .filterGrid {
     display: grid;
     grid-template-columns: 4fr;
     grid-gap: 2rem;
+    max-width: 100%;
 }
 
 .fallbackThumbnail {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 192px;
-    height: 192px;
+    width: 60px;
+    height: 60px;
 }
 .filters {
     margin-left: 16px;
+}
+
+.tabs {
+    margin-bottom: 32px;
+    margin-left: 32px;
 }

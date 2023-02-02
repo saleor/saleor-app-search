@@ -7,7 +7,7 @@ function Hit(props: { hit: any }) {
   return (
     <div className={styles.wrapper}>
       {props.hit?.thumbnail ? (
-        <Image height={180} width={180} src={props.hit.thumbnail} alt={props.hit.slug} />
+        <Image height={60} width={60} src={props.hit.thumbnail} alt={props.hit.slug} />
       ) : (
         <div className={styles.fallbackThumbnail}>
           <ImageIcon />
