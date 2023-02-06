@@ -8,10 +8,6 @@ function GraphQLProvider(props: PropsWithChildren<{}>) {
   const { appBridgeState } = useAppBridge();
   const saleorApiUrl = appBridgeState?.saleorApiUrl!;
 
-  if (!appBridgeState?.saleorApiUrl) {
-    return <div {...props}></div>;
-  }
-
   const client = createClient(saleorApiUrl, async () =>
     Promise.resolve({ token: appBridgeState?.token! }),
   );

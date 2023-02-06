@@ -5,13 +5,13 @@ import {
   Breadcrumb,
   HierarchicalMenu,
 } from "react-instantsearch-hooks-web";
-import { Card, CardContent, CardHeader, Typography } from "@material-ui/core";
+import { Card, CardContent, CardHeader } from "@material-ui/core";
 import { RangeInput } from "react-instantsearch-hooks-web";
 import "instantsearch.css/themes/reset.css";
 import "instantsearch.css/themes/satellite.css";
 import styles from "../../styles/search.module.css";
 
-import { makeStyles, PageTab, PageTabs } from "@saleor/macaw-ui";
+import { PageTab, PageTabs } from "@saleor/macaw-ui";
 import { SearchBox } from "../../components/SearchBox";
 import { Hits } from "../../components/Hits";
 import { useRouter } from "next/router";
@@ -21,18 +21,8 @@ import { useMemo, useState } from "react";
 import { Select, MenuItem } from "@material-ui/core";
 import { useQuery } from "react-query";
 import { SearchAppMainBar } from "../../components/SearchAppMainBar";
-import { AppColumnsLayout } from "../../components/AppColumnsLayout";
-
-const useStyles = makeStyles((theme) => ({
-  wrapper: {
-    border: `1px solid ${theme.palette.grey.A100}`,
-    minHeight: "calc(100vh - 100px)",
-    paddingBottom: 50,
-  },
-}));
 
 function Search() {
-  const classes = useStyles();
   const { appBridgeState } = useAppBridge();
   const [indexName, setIndexName] = useState<string>();
   const algoliaConfiguration = useConfiguration(
@@ -67,16 +57,16 @@ function Search() {
   const displayInterface = !!searchClient && indexName;
 
   return (
-    <div className={classes.wrapper}>
+    <>
       <SearchAppMainBar />
-      <PageTabs className={styles.tabs} value="search" onChange={handleClick}>
+      <PageTabs value="search" onChange={handleClick}>
         <PageTab label={"Configuration"} value="" />
         <PageTab label={"Preview"} value="search" />
       </PageTabs>
 
       {displayInterface ? (
         <InstantSearch searchClient={searchClient} indexName={indexName}>
-          <AppColumnsLayout variant="1:2">
+          <div className={styles.grid}>
             <div className={styles.filterGrid}>
               <Card>
                 <CardHeader title={"Index"} />
@@ -118,14 +108,12 @@ function Search() {
               <Hits />
               <Pagination />
             </div>
-          </AppColumnsLayout>
+          </div>
         </InstantSearch>
       ) : (
-        <Card>
-          <CardHeader title="To preview indexes, ensure app is configured" />
-        </Card>
+        <p>Loading...</p>
       )}
-    </div>
+    </>
   );
 }
 

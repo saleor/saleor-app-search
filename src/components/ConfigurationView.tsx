@@ -1,4 +1,4 @@
-import {Card, CardContent, CardHeader} from "@material-ui/core";
+import { Card, CardHeader } from "@material-ui/core";
 import { ImportProductsToAlgolia } from "./ImportProductsToAlgolia";
 import AlgoliaConfigurationCard from "./AlgoliaConfigurationCard";
 import { makeStyles, PageTab, PageTabs } from "@saleor/macaw-ui";
@@ -8,7 +8,7 @@ import Instructions from "./Instructions";
 import { AppColumnsLayout } from "./AppColumnsLayout";
 import { SearchAppMainBar } from "./SearchAppMainBar";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   buttonsGrid: { display: "flex", gap: 10 },
   topBar: {
     marginBottom: 32,
@@ -16,13 +16,7 @@ const useStyles = makeStyles((theme) => ({
   indexActions: {
     marginTop: 10,
   },
-  wrapper: {
-    border: `1px solid ${theme.palette.grey.A100}`,
-    minHeight: "calc(100vh - 100px)",
-    paddingBottom: 50,
-  },
-  tabs: { marginLeft: 32, marginBottom: 32 },
-}));
+});
 
 export const ConfigurationView = () => {
   const styles = useStyles();
@@ -30,9 +24,9 @@ export const ConfigurationView = () => {
 
   const handleClick = (val: string) => router.push("/" + val);
   return (
-    <div className={styles.wrapper}>
+    <div>
       <SearchAppMainBar />
-      <PageTabs className={styles.tabs} value="" onChange={handleClick}>
+      <PageTabs value="" onChange={handleClick}>
         <PageTab label={"Configuration"} value="" />
         <PageTab label={"Preview"} value="search" />
       </PageTabs>
@@ -41,10 +35,8 @@ export const ConfigurationView = () => {
         <div>
           <AlgoliaConfigurationCard />
           <Card className={styles.indexActions}>
-            <CardHeader title="Indexing" />
-            <CardContent>
-              <ImportProductsToAlgolia />
-            </CardContent>
+            <CardHeader title="Index actions" />
+            <ImportProductsToAlgolia />
           </Card>
         </div>
         <Instructions />

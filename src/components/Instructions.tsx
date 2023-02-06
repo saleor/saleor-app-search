@@ -5,7 +5,6 @@ function Instructions() {
   const { appBridge } = useAppBridge();
 
   const algoliaDashboardUrl = "https://www.algolia.com/apps/dashboard";
-  const algoliaApiKeysUrl = "https://www.algolia.com/account/api-keys/all";
 
   const openExternalUrl = (to: string) => {
     appBridge?.dispatch({
@@ -26,31 +25,20 @@ function Instructions() {
           How to configure
           <List style={{ marginBottom: 20 }}>
             <ListItem>
-              <Link
+              <a
                 onClick={(e) => {
                   e.preventDefault();
                   openExternalUrl(algoliaDashboardUrl);
                 }}
                 href={algoliaDashboardUrl}
               >
-                1. Create a new Algolia application
-              </Link>
+                Create a new Algolia application
+              </a>
             </ListItem>
             <ListItem>
-              <Typography>
-                2. Navigate to{" "}
-                <Link
-                  href={algoliaApiKeysUrl}
-                  onClick={() => {
-                    openExternalUrl(algoliaApiKeysUrl);
-                  }}
-                >
-                  application keys
-                </Link>{" "}
-                section and copy values to the form below
-              </Typography>
+              Navigate to application keys section and copy values to the form below
             </ListItem>
-            <ListItem>3. Save configuration</ListItem>
+            <ListItem>Save configuration</ListItem>
           </List>
           Useful links
           <List>

@@ -1,11 +1,9 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Button } from "@saleor/macaw-ui";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
 import { useConfiguration } from "../lib/configuration";
 import { Products, useQueryAllProducts } from "./useQueryAllProducts";
-import { WarningOutlined, WarningRounded } from "@material-ui/icons";
-import { Typography } from "@material-ui/core";
 
 const BATCH_SIZE = 100;
 
@@ -64,23 +62,13 @@ export const ImportProductsToAlgolia = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        paddingBottom: 32,
+        padding: 20,
         cursor: started ? "wait" : "auto",
       }}
     >
-      {searchProvider ? (
-        <Button disabled={started || !searchProvider} onClick={importProducts} fullWidth>
-          Start importing products and variants to Algolia
-        </Button>
-      ) : (
-        <div>
-          <Typography align="center">
-            <WarningRounded />
-          </Typography>
-          <Typography>Ensure Algolia is configured</Typography>
-        </div>
-      )}
-
+      <Button disabled={started || !searchProvider} onClick={importProducts} fullWidth>
+        Start importing products and variants to Algolia
+      </Button>
       {started && (
         <div
           style={{
