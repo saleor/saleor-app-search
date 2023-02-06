@@ -91,29 +91,8 @@ export const AlgoliaConfigurationCard = () => {
     <Card>
       <form onSubmit={onFormSubmit}>
         <CardHeader title="Configure Algolia settings"></CardHeader>
+
         <div className={classes.form}>
-          <div key="secret" className={classes.fieldContainer}>
-            <Controller
-              name="secretKey"
-              control={control}
-              render={({ field }) => (
-                <TextField disabled={isFormDisabled} label="Secret key" {...field} fullWidth />
-              )}
-            />
-          </div>
-          <Controller
-            name="searchKey"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                className={classes.fieldContainer}
-                disabled={isFormDisabled}
-                label="Search key"
-                {...field}
-                fullWidth
-              />
-            )}
-          />
           <Controller
             name="appId"
             control={control}
@@ -121,12 +100,42 @@ export const AlgoliaConfigurationCard = () => {
               <TextField
                 className={classes.fieldContainer}
                 disabled={isFormDisabled}
-                label="App ID"
+                label="Application ID"
+                helperText="Usually 10 characters, e.g. XYZAAABB00"
                 {...field}
                 fullWidth
               />
             )}
           />
+          <Controller
+            name="searchKey"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                className={classes.fieldContainer}
+                disabled={isFormDisabled}
+                label="Search-Only API Key"
+                {...field}
+                fullWidth
+              />
+            )}
+          />
+          <div key="secret" className={classes.fieldContainer}>
+            <Controller
+              name="secretKey"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  helperText="In Algolia dashboard it's a masked field"
+                  disabled={isFormDisabled}
+                  label="Admin API Key"
+                  {...field}
+                  fullWidth
+                />
+              )}
+            />
+          </div>
+
           <Controller
             name="indexNamePrefix"
             control={control}
@@ -135,6 +144,7 @@ export const AlgoliaConfigurationCard = () => {
                 className={classes.fieldContainer}
                 disabled={isFormDisabled}
                 label="Index name prefix"
+                helperText='Optional prefix, you can add "test" or "staging" to test the app'
                 {...field}
                 fullWidth
               />
